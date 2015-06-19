@@ -12,7 +12,6 @@ use Psr\Http\Message\ServerRequestInterface;
 interface ToHtmlInterface
 {
     /**
-     * @API
      * @param ServerRequestInterface $request
      * @param Inputs                 $inputs
      * @return ToHtmlInterface
@@ -23,5 +22,5 @@ interface ToHtmlInterface
      * @API
      * @return string
      */
-    public function toHtml();
+    public function __toString();
 }
