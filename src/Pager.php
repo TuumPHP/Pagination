@@ -147,8 +147,8 @@ class Pager
     }
 
     /**
-     * @param ToHtmlInterface $html
-     * @return ToHtmlInterface
+     * @param ToStringInterface $html
+     * @return ToStringInterface
      */
     public function toHtml($html)
     {

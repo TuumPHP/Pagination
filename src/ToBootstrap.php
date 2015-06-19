@@ -3,7 +3,7 @@ namespace WScore\Pagination;
 
 use Psr\Http\Message\ServerRequestInterface;
 
-class ToBootstrap implements ToHtmlInterface
+class ToBootstrap implements ToStringInterface
 {
     /**
      * @var ServerRequestInterface

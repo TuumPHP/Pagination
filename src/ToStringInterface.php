@@ -9,12 +9,12 @@ use Psr\Http\Message\ServerRequestInterface;
  * Date: 15/06/19
  * Time: 12:54
  */
-interface ToHtmlInterface
+interface ToStringInterface
 {
     /**
      * @param ServerRequestInterface $request
      * @param Inputs                 $inputs
-     * @return ToHtmlInterface
+     * @return ToStringInterface
      */
     public function withRequestAndInputs($request, $inputs);
 
