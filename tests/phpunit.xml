@@ -11,9 +11,8 @@
          syntaxCheck="false"
         >
     <testsuites>
-        <testsuite name="WScore/Pile Test Suite">
-            <directory>Viewer</directory>
-            <directory>Tuum</directory>
+        <testsuite name="Pagination test">
+            <directory>Pagination</directory>
         </testsuite>
     </testsuites>
 </phpunit>

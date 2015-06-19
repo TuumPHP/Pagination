@@ -62,7 +62,9 @@ class Inputs
      */
     public function get($key, $alt = null)
     {
-        return array_key_exists($key, $this->inputs) ? $this->inputs[$key] : $alt;
+        return array_key_exists($key, $this->inputs)
+            ? $this->inputs[$key]
+            : $this->inputs[$key] = $alt;
     }
 
     /**

@@ -115,14 +115,10 @@ class Pager
     }
 
     /**
-     * @param null|string $name
+     *
      */
-    private function setSessionName($name = null)
+    private function setSessionName()
     {
-        if (!is_null($name)) {
-            $this->name = $name;
-            return;
-        }
         $server     = $this->request->getServerParams();
         $script     = isset($server['PATH_INFO']) ? $server['PATH_INFO'] : __FILE__;
         $this->name = 'pager-' . md5($script);

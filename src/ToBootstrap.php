@@ -59,7 +59,7 @@ class ToBootstrap implements ToHtmlInterface
      */
     private function getRequestUri()
     {
-        return $this->request->getUri()->getPath();
+        return $this->request->getUri()->getPath() . '?';
     }
 
     // +----------------------------------------------------------------------+
@@ -81,7 +81,7 @@ class ToBootstrap implements ToHtmlInterface
         }
         $html .= $this->bootLi('next', $pages['next_page']);
         $html .= $this->bootLi('&raquo;', $pages['last_page']);
-        return "<ul class=\"pagination\">{$html}</ul>";
+        return "<ul class=\"pagination\">\n{$html}</ul>\n ";
     }
 
     /**
@@ -94,11 +94,11 @@ class ToBootstrap implements ToHtmlInterface
     {
         if ($page != $this->currPage) {
             $key  = $this->inputs->pagerKey;
-            $html = "<li><a href='{$this->getRequestUri()}{$key}={$page}' >{$label}</a></li>";
+            $html = "<li><a href='{$this->getRequestUri()}{$key}={$page}' >{$label}</a></li>\n";
         } elseif ($type == 'disable') {
-            $html = "<li class='disabled'><a href='#' >{$label}</a></li>";
+            $html = "<li class='disabled'><a href='#' >{$label}</a></li>\n";
         } else {
-            $html = "<li class='active'><a href='#' >{$label}</a></li>";
+            $html = "<li class='active'><a href='#' >{$label}</a></li>\n";
         }
         return $html;
     }
