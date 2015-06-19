@@ -3,7 +3,14 @@ namespace WScore\Pagination\Html;
 
 use WScore\Pagination\ToStringInterface;
 
-class ToBootstrap extends AbstractBootstrap implements ToStringInterface
+/**
+ * Class ToBootstrap3
+ *
+ * to create pagination html for Bootstrap 3.
+ *
+ * @package WScore\Pagination\Html
+ */
+class ToBootstrap3 extends AbstractBootstrap implements ToStringInterface
 {
     /**
      * @var array
@@ -16,6 +23,13 @@ class ToBootstrap extends AbstractBootstrap implements ToStringInterface
         'num_links' => 5,
     ];
 
+    public $sr_label = [
+        'top'  => 'first page',
+        'prev' => 'previous page',
+        'next' => 'next page',
+        'last' => 'last page',
+    ];
+    
     /**
      * @param array $options
      */
@@ -66,9 +80,14 @@ class ToBootstrap extends AbstractBootstrap implements ToStringInterface
     protected function bootLi($label, $page, $type = 'disable')
     {
         $label = isset($this->options[$label]) ? $this->options[$label] : $label;
+        if (isset($this->sr_label[$label])) {
+            $srLbl = "aria-label=\"{$this->sr_label[$label]}\"";
+        } else {
+            $srLbl = '';            
+        }
         if ($page != $this->currPage) {
             $key  = $this->inputs->pagerKey;
-            $html = "<li><a href='{$this->getRequestUri()}{$key}={$page}' >{$label}</a></li>\n";
+            $html = "<li><a href='{$this->getRequestUri()}{$key}={$page}' {$srLbl} >{$label}</a></li>\n";
         } elseif ($type == 'disable') {
             $html = "<li class='disabled'><a href='#' >{$label}</a></li>\n";
         } else {
