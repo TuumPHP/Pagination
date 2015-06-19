@@ -23,20 +23,20 @@ class ToBootstrap implements ToHtmlInterface
     /**
      * @var array
      */
-    private $options = [];
+    private $options = [
+        'top'       => '&laquo;',
+        'prev'      => 'prev',
+        'next'      => 'next',
+        'last'      => '&raquo;',
+        'num_links' => 5,
+    ];
 
     /**
      * @param array $options
      */
     public function __construct($options = [])
     {
-        $this->options = $options + [
-                'top'       => '&laquo;',
-                'prev'      => 'prev',
-                'next'      => 'next',
-                'last'      => '&raquo;',
-                'num_links' => 5,
-            ];
+        $this->options = $options + $this->options;
     }
 
     /**
@@ -77,14 +77,35 @@ class ToBootstrap implements ToHtmlInterface
         }
         return "<ul class=\"pagination\">\n{$html}</ul>\n";
     }
-    
+
+    /**
+     * @param int $numLinks
+     * @return array
+     */
+    private function calculatePagination($numLinks = 5)
+    {
+        $lastPage = $this->findLastPage($numLinks);
+        $currPage = $this->inputs->getCurrPage();
+
+        $pages   = [];
+        $pages[] = ['label' => 'top', 'page' => 1]; // top
+        $pages[] = ['label' => 'prev', 'page' => max($currPage - 1, 1)]; // prev
+
+        // list of pages, from $start till $last. 
+        $pages   = array_merge($pages, $this->fillPages($numLinks));
+
+        $pages[] = ['label' => 'next', 'page' => min($currPage + 1, $lastPage)]; // next
+        $pages[] = ['label' => 'last', 'page' => $lastPage]; // last
+        return $pages;
+    }
+
     /**
      * @param array $info
      * @return string
      */    
     private function listItem(array $info)
     {
-        $label = isset($info['label']) ? $info['label'] : '';
+        $label = isset($this->options[$info['label']]) ? $this->options[$info['label']] : $info['label'];
         $page  = isset($info['page']) ? $info['page'] : '';
         $type  = isset($info['type']) ? $info['type'] : '';
         return $this->bootLi($label, $page, $type);
@@ -107,27 +128,6 @@ class ToBootstrap implements ToHtmlInterface
             $html = "<li class='active'><a href='#' >{$label}</a></li>\n";
         }
         return $html;
-    }
-
-    /**
-     * @param int $numLinks
-     * @return array
-     */
-    private function calculatePagination($numLinks = 5)
-    {
-        $lastPage = $this->findLastPage($numLinks);
-        $currPage = $this->inputs->getCurrPage();
-
-        $pages   = [];
-        $pages[] = ['label' => '&laquo;', 'page' => 1]; // top
-        $pages[] = ['label' => 'prev', 'page' => max($currPage - 1, 1)]; // prev
-
-        // list of pages, from $start till $last. 
-        $pages   = array_merge($pages, $this->fillPages($numLinks));
-
-        $pages[] = ['label' => 'next', 'page' => min($currPage + 1, $lastPage)]; // next
-        $pages[] = ['label' => '&raquo;', 'page' => $lastPage]; // last
-        return $pages;
     }
 
     /**
