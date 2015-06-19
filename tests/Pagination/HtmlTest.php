@@ -5,7 +5,7 @@ use tests\Utils\Segment;
 use Tuum\Respond\RequestHelper;
 use WScore\Pagination\Inputs;
 use WScore\Pagination\Pager;
-use WScore\Pagination\ToBootstrap;
+use WScore\Pagination\Html\ToBootstrap;
 
 class HtmlTest extends \PHPUnit_Framework_TestCase
 {

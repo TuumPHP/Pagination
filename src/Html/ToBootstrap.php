@@ -1,7 +1,9 @@
 <?php
-namespace WScore\Pagination;
+namespace WScore\Pagination\Html;
 
 use Psr\Http\Message\ServerRequestInterface;
+use WScore\Pagination\Inputs;
+use WScore\Pagination\ToStringInterface;
 
 class ToBootstrap implements ToStringInterface
 {
