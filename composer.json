@@ -12,6 +12,9 @@
     "require": {
       "psr/http-message": "^1.0"
     },
+    "require-dev": {
+        "tuum/respond": "dev-master"
+    },
     "autoload": {
         "psr-4": {
             "WScore\\Pagination\\": "src/"
