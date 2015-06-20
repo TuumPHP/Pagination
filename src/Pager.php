@@ -94,6 +94,23 @@ class Pager
     }
 
     /**
+     * set up pager using the query data ($_GET) and pathInfo. 
+     * 
+     * @API
+     * @param array $query    query like $_GET
+     * @param null  $path     path info
+     * @return Pager
+     */    
+    public function withQuery(array $query, $path=null)
+    {
+        $self = clone($this);
+        $path = $path ?: $_SERVER['PATH_INFO'];
+        $self->setSessionName($path);
+        $self->loadPageKey($query);
+        return $self;
+    }
+    
+    /**
      * @param array $query
      */
     private function loadPageKey($query)
