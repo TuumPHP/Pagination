@@ -1,15 +1,14 @@
 <?php
 namespace WScore\Pagination\Html;
 
-use Psr\Http\Message\ServerRequestInterface;
 use WScore\Pagination\Inputs;
 
 abstract class AbstractBootstrap
 {
     /**
-     * @var ServerRequestInterface
+     * @var string
      */
-    protected $request;
+    protected $path;
 
     /**
      * @var Inputs
@@ -33,14 +32,14 @@ abstract class AbstractBootstrap
 
     /**
      * @API
-     * @param ServerRequestInterface $request
+     * @param string   $path
      * @param Inputs                 $inputs
      * @return $this
      */
-    public function withRequestAndInputs($request, $inputs)
+    public function withRequestAndInputs($path, $inputs)
     {
         $self           = clone($this);
-        $self->request  = $request;
+        $self->path     = $path;
         $self->inputs   = $inputs;
         $self->currPage = $inputs->getCurrPage();
         return $self;
@@ -77,7 +76,7 @@ abstract class AbstractBootstrap
      */
     protected function getRequestUri()
     {
-        return $this->request->getUri()->getPath() . '?';
+        return $this->path . '?';
     }
 
     /**

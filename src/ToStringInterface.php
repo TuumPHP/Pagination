@@ -1,8 +1,6 @@
 <?php
 namespace WScore\Pagination;
 
-use Psr\Http\Message\ServerRequestInterface;
-
 /**
  * Created by PhpStorm.
  * User: asao
@@ -12,11 +10,11 @@ use Psr\Http\Message\ServerRequestInterface;
 interface ToStringInterface
 {
     /**
-     * @param ServerRequestInterface $request
-     * @param Inputs                 $inputs
+     * @param string $path
+     * @param Inputs $inputs
      * @return ToStringInterface
      */
-    public function withRequestAndInputs($request, $inputs);
+    public function withRequestAndInputs($path, $inputs);
 
     /**
      * @API

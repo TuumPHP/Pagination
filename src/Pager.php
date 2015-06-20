@@ -3,43 +3,66 @@ namespace WScore\Pagination;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Tuum\Respond\RequestHelper;
+use Tuum\Respond\Service\SessionStorageInterface;
 
 class Pager
 {
     /**
-     * @var ServerRequestInterface
-     */
-    private $request;
-
-    /**
+     * name for session storage key. 
+     * 
      * @var string
      */
     private $name;
 
     /**
+     * query key name for setting page number. 
+     * 
      * @var string
      */
     private $pagerKey = '_page';
 
     /**
+     * query key name for setting limit (per page number).
+     * 
      * @var string
      */
     private $limitKey = '_limit';
 
     /**
+     * query for pager. maybe get from $_GET, or from session. 
+     * 
      * @var array
      */
     private $inputs = [];
 
     /**
+     * object representation of the input query for pager. 
+     * will instantiated after call method. 
+     * 
      * @var Inputs
      */
     private $inputObject;
 
     /**
+     * default values. 
+     * 
      * @var array
      */
     private $default = [];
+
+    /**
+     * path for the query. 
+     * 
+     * @var string
+     */
+    private $path;
+
+    /**
+     * session storage manager if exists. 
+     * 
+     * @var SessionStorageInterface
+     */
+    private $session;
 
     /**
      * @param array $default
@@ -53,6 +76,8 @@ class Pager
     }
 
     /**
+     * set up pager using the server request. 
+     * 
      * @API
      * @param ServerRequestInterface $request
      * @return $this
@@ -60,18 +85,19 @@ class Pager
     public function withRequest($request)
     {
         $self = clone($this);
-        $self->request = $request;
-        $self->setSessionName();
-        $self->loadPageKey();
+        if (class_exists(RequestHelper::class)) {
+            $self->session = RequestHelper::getSessionMgr($request);
+        }
+        $self->setSessionName($request->getUri()->getPath());
+        $self->loadPageKey($request->getQueryParams());
         return $self;
     }
 
     /**
-     *
+     * @param array $query
      */
-    private function loadPageKey()
+    private function loadPageKey($query)
     {
-        $query = $this->request->getQueryParams();
         if (!array_key_exists($this->pagerKey, $query)) {
             $this->inputs = $query;
         } else {
@@ -87,12 +113,10 @@ class Pager
      */
     private function loadFromSession($query)
     {
-        // get saved inputs from session.
-        $name = $this->getSessionName();
-        if (class_exists(RequestHelper::class)) {
-            $saved = RequestHelper::getSession($this->request, $name, []);
+        if ($this->session) {
+            $saved = $this->session->get($this->name, []);
         } else {
-            $saved = array_key_exists($name, $_SESSION) ? $_SESSION[$name] : [];
+            $saved = array_key_exists($this->name, $_SESSION) ? $_SESSION[$this->name] : [];
         }
         // check if _page is specified in $query. if so, replace it with the saved value.
         if (isset($query[$this->pagerKey])) {
@@ -106,33 +130,26 @@ class Pager
      */
     private function saveToSession()
     {
-        if (class_exists(RequestHelper::class)) {
-            RequestHelper::setSession($this->request, $this->getSessionName(), $this->inputs);
+        if ($this->session) {
+            $this->session->set($this->name, $this->inputs);
         } else {
-            $_SESSION[$this->getSessionName()] = $this->inputs;
+            $_SESSION[$this->name] = $this->inputs;
         }
 
     }
 
     /**
-     *
+     * @param string $pathInfo
      */
-    private function setSessionName()
+    private function setSessionName($pathInfo)
     {
-        $server     = $this->request->getServerParams();
-        $script     = isset($server['PATH_INFO']) ? $server['PATH_INFO'] : __FILE__;
-        $this->name = 'pager-' . md5($script);
+        $this->path = $pathInfo;
+        $this->name = 'pager-' . md5($pathInfo);
     }
 
     /**
-     * @return string
-     */
-    private function getSessionName()
-    {
-        return $this->name;
-    }
-
-    /**
+     * call to construct your query based on the pager's input. 
+     * 
      * @API
      * @param \Closure $closure
      * @return mixed
@@ -147,6 +164,9 @@ class Pager
     }
 
     /**
+     * set up ToStringInterface objects to output html pagination. 
+     * 
+     * @API
      * @param ToStringInterface $html
      * @return ToStringInterface
      */
@@ -155,6 +175,6 @@ class Pager
         if (!isset($this->inputObject)) {
             throw new \BadMethodCallException('must call before html.');
         }
-        return $html->withRequestAndInputs($this->request, $this->inputObject);
+        return $html->withRequestAndInputs($this->path, $this->inputObject);
     }
 }
