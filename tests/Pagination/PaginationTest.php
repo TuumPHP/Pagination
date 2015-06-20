@@ -135,4 +135,33 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('20', $inputs->getOffset());
         $this->assertEquals(123, $inputs->getTotal());
     }
+
+    /**
+     * @test
+     */
+    function withQuery_third_request_with_only_page_keeps_previous_page()
+    {
+        // first request.
+        $this->pager->withQuery([
+            'test' => 'tested',
+            'more' => 'done',
+        ], '/test/');
+
+        // second request. uses the same session segment.
+        (new Pager())->withQuery(['_page' => 2], '/test/');
+
+        // third request.
+        $pager = (new Pager())->withQuery(['_page' => null], '/test/');
+
+        $inputs = $pager->call(function (Inputs $inputs) {
+            $inputs->setTotal(123);
+            return $inputs;
+        });
+        $this->assertEquals('tested', $inputs->get('test'));
+        $this->assertEquals('done', $inputs->get('more'));
+        $this->assertEquals('2', $inputs->getCurrPage());
+        $this->assertEquals('20', $inputs->getLimit());
+        $this->assertEquals('20', $inputs->getOffset());
+        $this->assertEquals(123, $inputs->getTotal());
+    }
 }
