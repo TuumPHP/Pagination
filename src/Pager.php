@@ -2,8 +2,6 @@
 namespace WScore\Pagination;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Tuum\Respond\RequestHelper;
-use Tuum\Respond\Service\SessionStorageInterface;
 
 class Pager
 {
@@ -58,13 +56,6 @@ class Pager
     private $path;
 
     /**
-     * session storage manager if exists. 
-     * 
-     * @var SessionStorageInterface
-     */
-    private $session;
-
-    /**
      * @param array $default
      */
     public function __construct($default = [])
@@ -85,9 +76,6 @@ class Pager
     public function withRequest($request)
     {
         $self = clone($this);
-        if (class_exists(RequestHelper::class)) {
-            $self->session = RequestHelper::getSessionMgr($request);
-        }
         $self->setSessionName($request->getUri()->getPath());
         $self->loadPageKey($request->getQueryParams());
         return $self;
@@ -135,11 +123,7 @@ class Pager
      */
     private function loadFromSession($query)
     {
-        if ($this->session) {
-            $loaded = $this->session->get($this->name, []);
-        } else {
-            $loaded = array_key_exists($this->name, $_SESSION) ? $_SESSION[$this->name] : [];
-        }
+        $loaded = array_key_exists($this->name, $_SESSION) ? $_SESSION[$this->name] : [];
         // check if _page is specified in $query. if so, replace it with the saved value.
         if (isset($query[$this->pagerKey])) {
             $loaded[$this->pagerKey] = (int)$query[$this->pagerKey];
@@ -152,12 +136,7 @@ class Pager
      */
     private function saveToSession()
     {
-        if ($this->session) {
-            $this->session->set($this->name, $this->inputs);
-        } else {
-            $_SESSION[$this->name] = $this->inputs;
-        }
-
+        $_SESSION[$this->name] = $this->inputs;
     }
 
     /**

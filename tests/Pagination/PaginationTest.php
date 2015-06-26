@@ -1,18 +1,12 @@
 <?php
 namespace tests\Pagination;
 
-use tests\Utils\Segment;
 use Tuum\Respond\RequestHelper;
 use WScore\Pagination\Inputs;
 use WScore\Pagination\Pager;
 
 class PaginationTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Segment
-     */
-    private $session;
-
     /**
      * @var Pager
      */
@@ -21,7 +15,6 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
     function setup()
     {
         $this->pager   = new Pager();
-        $this->session = new Segment();
     }
 
     function test0()
@@ -37,7 +30,6 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
     function createRequest($path, $method = 'get')
     {
         $req = RequestHelper::createFromPath($path, $method);
-        $req = RequestHelper::withSessionMgr($req, $this->session);
         return $req;
     }
 
