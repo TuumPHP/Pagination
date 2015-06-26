@@ -3,8 +3,6 @@ Generic Pagination
 
 a generic pagination class for PSR-7 and others. 
 
-Optionally, Tuum/Respond helpers maybe used if they exist. 
-
 ### License
 
 MIT license
@@ -33,6 +31,7 @@ $pager = $pager->withQuery($_GET, '/find');
 // query 
 $found = $pager->call(
     function(Inputs $inputs) use($pdo) {
+        // query the PDO!
         return $pdo->prepare("
             SELECT * FROM tbl WHERE type=? and num>? OFFSET ? LIMIT ?
             ")
@@ -46,7 +45,7 @@ $found = $pager->call(
     });
 ```
 
-Structuring Query
+Requesting for Query
 -----
 
 The page key, `_page`, is the key. 
@@ -59,6 +58,7 @@ Construct a query form **without _page key**.
 <form>
 <input type="text" name="type" />
 <input type="integer" name="num" />
+<input type="submit" />
 </form>
 ```
 
@@ -86,6 +86,29 @@ GET /find?_page
 
 will set offset to the page number of last request. 
 
+### setting total
+
+The pager does not know how to get a total; please supply the total count in the closure for the call method; 
+
+```php
+// query 
+$found = $pager->call(
+    function(Inputs $inputs) use($pdo) {
+        // calculate total
+        $inputs->setTotal(
+            $pdo->prepare("SELECT COUNT(*) FROM tbl WHERE type=? and num>? ")
+                ->execute([
+                    $inputs->get('type'),
+                    $inputs->get('num')
+                ])
+                ->fetchColumn()
+        );
+        // query the PDO!
+        return $pdo->prepare("...");
+    });
+```
+
+
 Pagination Component
 ----
 
@@ -102,14 +125,13 @@ echo $pages->__toString(); // outputs pagination html
 There are already ToBootstrap class to construct pagination component for Bootstrap. 
 
 ```php
-$pages = new ToBootstrap([
+$pages = $pager->toHtml(new ToBootstrap([
         'top'       => '&laquo; first',
         'prev'      => '&lt; prev',
         'next'      => 'next &gt;',
         'last'      => 'last &raquo;',
         'num_links' => 3,
-]);
-$pages = $pager->toHtml($pages);
+]));
 echo $pages->__toString(); // outputs pagination html
 ```
 

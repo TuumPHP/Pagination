@@ -8,7 +8,6 @@
             "email": "kamei@workspot.jp"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
       "psr/http-message": "^1.0"
     },
