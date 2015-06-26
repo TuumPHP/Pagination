@@ -111,6 +111,8 @@ class Pager
     }
     
     /**
+     * set query input data based on $query, or from session.
+     *
      * @param array $query
      */
     private function loadPageKey($query)
@@ -125,25 +127,28 @@ class Pager
     }
 
     /**
+     * load query input data from session.
+     * the page number (pagerKey) is replaced with the input query's page.
+     *
      * @param array $query
      * @return array
      */
     private function loadFromSession($query)
     {
         if ($this->session) {
-            $saved = $this->session->get($this->name, []);
+            $loaded = $this->session->get($this->name, []);
         } else {
-            $saved = array_key_exists($this->name, $_SESSION) ? $_SESSION[$this->name] : [];
+            $loaded = array_key_exists($this->name, $_SESSION) ? $_SESSION[$this->name] : [];
         }
         // check if _page is specified in $query. if so, replace it with the saved value.
         if (isset($query[$this->pagerKey])) {
-            $saved[$this->pagerKey] = (int)$query[$this->pagerKey];
+            $loaded[$this->pagerKey] = (int)$query[$this->pagerKey];
         }
-        return $saved;
+        return $loaded;
     }
 
     /**
-     * saves $inputs to session.
+     * saves $this->inputs to session.
      */
     private function saveToSession()
     {
