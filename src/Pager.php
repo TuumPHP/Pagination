@@ -106,12 +106,31 @@ class Pager
     private function loadPageKey($query)
     {
         if (!array_key_exists($this->pagerKey, $query)) {
-            $this->inputs = $query;
+            $this->inputs = $this->secureInput($query);
         } else {
             $this->inputs = $this->loadFromSession($query);
         }
         $this->inputs += $this->default;
         $this->saveToSession();
+    }
+
+    /**
+     * at least check if the input string does not have null-byte
+     * and is a UTF-8 valid string.
+     *
+     * @param array $query
+     * @return array
+     */
+    private function secureInput(array $query)
+    {
+        array_walk_recursive($query, function(&$v) {
+            if (strpos($v, "\0") !== false) {
+                $v = '';
+            } elseif( !mb_check_encoding($v, 'UTF-8')) {
+                $v = '';
+            }
+        });
+        return $query;
     }
 
     /**
@@ -125,7 +144,7 @@ class Pager
     {
         $loaded = array_key_exists($this->name, $_SESSION) ? $_SESSION[$this->name] : [];
         // check if _page is specified in $query. if so, replace it with the saved value.
-        if (isset($query[$this->pagerKey])) {
+        if (isset($query[$this->pagerKey]) && $query[$this->pagerKey] >= 1) {
             $loaded[$this->pagerKey] = (int)$query[$this->pagerKey];
         }
         return $loaded;
