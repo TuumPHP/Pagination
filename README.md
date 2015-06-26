@@ -12,9 +12,16 @@ Getting Started
 
 ### installation
 
-not registered to packagist, yet. 
+please use composer to install WScore/Pagination package. 
 
-### code
+```sh
+$ composer require "wscore/pagination"
+```
+
+
+### sample code
+
+First, instantiate a Pager class. 
 
 ```php
 use WScore\Pagination\Inputs;
@@ -27,7 +34,11 @@ $pager = new Pager(['_limit' => 15]);
 $pager = $pager->withRequest($request);
 // or from global data. 
 $pager = $pager->withQuery($_GET, '/find');
+```
 
+Then, call a query with `Pager::call` method and a `closure`. 
+
+```php
 // query 
 $found = $pager->call(
     function(Inputs $inputs) use($pdo) {
@@ -45,7 +56,10 @@ $found = $pager->call(
     });
 ```
 
-Requesting for Query
+The `$inputs` object holds the information to construct a query. You can return anything from the closure; it will be passed back to you from the `Pager::call` method. 
+
+
+Constructing a Request
 -----
 
 The page key, `_page`, is the key. 
@@ -86,7 +100,7 @@ GET /find?_page
 
 will set offset to the page number of last request. 
 
-### setting total
+### setting a total
 
 The pager does not know how to get a total; please supply the total count in the closure for the call method; 
 
@@ -120,7 +134,7 @@ $pages = $pager->toHtml($pages);
 echo $pages->__toString(); // outputs pagination html
 ```
 
-### ToBoostrap and ToBootstrap3
+### pagination for Boostrap CSS
 
 There are already ToBootstrap class to construct pagination component for Bootstrap. 
 
