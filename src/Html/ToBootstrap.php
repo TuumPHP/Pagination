@@ -9,7 +9,7 @@ class ToBootstrap extends AbstractBootstrap implements ToStringInterface
      * @var array
      */
     protected $options = [
-        'top'       => '&laquo;',
+        'first'     => '&laquo;',
         'prev'      => 'prev',
         'next'      => 'next',
         'last'      => '&raquo;',

@@ -113,8 +113,8 @@ abstract class AbstractBootstrap
         $currPage = $this->inputs->getCurrPage();
 
         $pages   = [];
-        $pages[] = ['label' => 'top',  'page' => 1]; // top
-        $pages[] = ['label' => 'prev', 'page' => max($currPage - 1, 1)]; // prev
+        $pages[] = ['label' => 'first', 'page' => 1]; // top
+        $pages[] = ['label' => 'prev',  'page' => max($currPage - 1, 1)]; // prev
 
         // list of pages, from $start till $last.
         $pages   = array_merge($pages, $this->fillPages($numLinks));

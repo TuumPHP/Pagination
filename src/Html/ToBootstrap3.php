@@ -16,7 +16,7 @@ class ToBootstrap3 extends AbstractBootstrap implements ToStringInterface
      * @var array
      */
     protected $options = [
-        'top'       => '&laquo;',
+        'first'     => '&laquo;',
         'prev'      => 'prev',
         'next'      => 'next',
         'last'      => '&raquo;',
@@ -24,10 +24,10 @@ class ToBootstrap3 extends AbstractBootstrap implements ToStringInterface
     ];
 
     public $sr_label = [
-        'top'  => 'first page',
-        'prev' => 'previous page',
-        'next' => 'next page',
-        'last' => 'last page',
+        'first' => 'first page',
+        'prev'  => 'previous page',
+        'next'  => 'next page',
+        'last'  => 'last page',
     ];
     
     /**
