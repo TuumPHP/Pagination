@@ -104,7 +104,7 @@ class Pager
     public function withQuery(array $query, $path=null)
     {
         $self = clone($this);
-        $path = $path ?: $_SERVER['PATH_INFO'];
+        $path = $path ?: htmlspecialchars($_SERVER['PATH_INFO'], ENT_QUOTES, 'UTF-8');
         $self->setSessionName($path);
         $self->loadPageKey($query);
         return $self;
