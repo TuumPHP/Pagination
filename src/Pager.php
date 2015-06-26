@@ -176,9 +176,7 @@ class Pager
      */
     public function call($closure)
     {
-        $inputs = new Inputs($this->inputs);
-        $inputs->pagerKey = $this->pagerKey;
-        $inputs->limitKey = $this->limitKey;
+        $inputs = $this->forgeInputs();
         $this->inputObject = $inputs;
         return $closure($inputs);
     }
@@ -192,7 +190,19 @@ class Pager
      */
     public function toHtml($html)
     {
-        $inputs = $this->inputObject ?: new Inputs($this->inputs);
+        $inputs = $this->inputObject ?: $this->forgeInputs();
         return $html->withRequestAndInputs($this->path, $inputs);
+    }
+
+    /**
+     * @return Inputs
+     */
+    private function forgeInputs()
+    {
+        $inputs           = new Inputs($this->inputs);
+        $inputs->pagerKey = $this->pagerKey;
+        $inputs->limitKey = $this->limitKey;
+
+        return $inputs;
     }
 }
