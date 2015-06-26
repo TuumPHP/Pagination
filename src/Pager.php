@@ -76,7 +76,7 @@ class Pager
     }
 
     /**
-     * set up pager using the server request. 
+     * set up pager using the PSR7 server request.
      * 
      * @API
      * @param ServerRequestInterface $request
@@ -189,9 +189,7 @@ class Pager
      */
     public function toHtml($html)
     {
-        if (!isset($this->inputObject)) {
-            throw new \BadMethodCallException('must call before html.');
-        }
-        return $html->withRequestAndInputs($this->path, $this->inputObject);
+        $inputs = $this->inputObject ?: new Inputs($this->inputs);
+        return $html->withRequestAndInputs($this->path, $inputs);
     }
 }
