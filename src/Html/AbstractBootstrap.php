@@ -78,8 +78,8 @@ abstract class AbstractBootstrap
      */
     protected function fillPages($numLinks)
     {
-        $start = max($this->currPage - $numLinks, 1);
-        $last  = min($this->currPage + $numLinks, $this->findLastPage($numLinks));
+        $start = max($this->currPage - $numLinks, $this->inputs->getFirstPage());
+        $last  = min($this->currPage + $numLinks, $this->inputs->getLastPage());
 
         $pages = [];
         for ($page = $start; $page <= $last; $page++) {
@@ -90,37 +90,19 @@ abstract class AbstractBootstrap
 
     /**
      * @param int $numLinks
-     * @return int
-     */
-    protected function findLastPage($numLinks)
-    {
-        // total and perPage is set.
-        $total = $this->inputs->getTotal();
-        $pages = $this->inputs->getLimit();
-        if (!is_null($total) && $pages) {
-            return (integer)(ceil($total / $pages));
-        }
-        return $this->currPage + $numLinks;
-    }
-
-    /**
-     * @param int $numLinks
      * @return array
      */
     protected function calculatePagination($numLinks = 5)
     {
-        $lastPage = $this->findLastPage($numLinks);
-        $currPage = $this->inputs->getPage();
-
         $pages   = [];
-        $pages[] = ['label' => 'first', 'page' => 1]; // top
-        $pages[] = ['label' => 'prev',  'page' => max($currPage - 1, 1)]; // prev
+        $pages[] = ['label' => 'first', 'page' => $this->inputs->getFirstPage()]; // top
+        $pages[] = ['label' => 'prev',  'page' => $this->inputs->getPrevPage()]; // prev
 
         // list of pages, from $start till $last.
         $pages   = array_merge($pages, $this->fillPages($numLinks));
 
-        $pages[] = ['label' => 'next', 'page' => min($currPage + 1, $lastPage)]; // next
-        $pages[] = ['label' => 'last', 'page' => $lastPage]; // last
+        $pages[] = ['label' => 'next', 'page' => $this->inputs->getNextPage()]; // next
+        $pages[] = ['label' => 'last', 'page' => $this->inputs->getLastPage()]; // last
         return $pages;
     }
 
@@ -139,8 +121,7 @@ abstract class AbstractBootstrap
             $srLbl = '';
         }
         if ($page != $this->currPage) {
-            $key  = $this->inputs->pagerKey;
-            $html = "<li><a href='{$this->getRequestUri()}{$key}={$page}'";
+            $html = "<li><a href='{$this->inputs->getPath($page)}'";
             $html .= $srLbl. " >{$label}</a></li>\n";
         } elseif ($type == 'disable') {
             $html = "<li class='disabled'><a href='#' >{$label}</a></li>\n";

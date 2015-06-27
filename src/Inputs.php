@@ -140,4 +140,62 @@ class Inputs
         }
         return 0;
     }
+
+    /**
+     * @return int
+     */
+    public function getSelfPage() 
+    {
+        return $this->getPage();
+    }
+
+    /**
+     * @return int
+     */
+    public function getFirstPage() 
+    {
+        return 1;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLastPage() 
+    {
+        $total = $this->getTotal();
+        if (!$total) {
+            return $this->getPage() + 1;
+        }
+        $pages = $this->getLimit();
+        return (integer)(ceil($total / $pages));
+    }
+
+    /**
+     * @return int
+     */
+    public function getNextPage() 
+    {
+        return min($this->getPage() + 1, $this->getLastPage() );
+    }
+
+    /**
+     * @return int
+     */
+    public function getPrevPage() 
+    {
+        return max($this->getPage() - 1, $this->getFirstPage());
+    }
+
+    /**
+     * @param null|int $page
+     * @return string
+     */
+    public function getPath($page=null)
+    {
+        if (is_null($page)) {
+            return $this->path;
+        }
+        $page = (int) $page;
+        return $this->path . '?' . $this->pagerKey . '=' . $page;
+    }
 }
