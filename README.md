@@ -40,10 +40,10 @@ Then, call a query with `Pager::call` method and a `closure`.
 
 ```php
 // query 
-$found = $pager->call(
+$inputs = $pager->call(
     function(Inputs $inputs) use($pdo) {
         // query the PDO!
-        return $pdo->prepare("
+        $found = $pdo->prepare("
             SELECT * FROM tbl WHERE type=? and num>? OFFSET ? LIMIT ?
             ")
             ->execute([
@@ -53,13 +53,16 @@ $found = $pager->call(
                 $inputs->getLimit(),
             ])
             ->fetchAll();
+        $inputs->setList($found);
     });
+$found = $inputs->getList();
+$type  = $inputs->get('type');
 ```
 
 The `$inputs` object holds the information to construct a query. You can return anything from the closure; it will be passed back to you from the `Pager::call` method. 
 
 
-Constructing a Request
+Constructing a HTML Form
 -----
 
 The page key, `_page`, is the key. 
@@ -100,6 +103,9 @@ GET /find?_page
 
 will set offset to the page number of last request. 
 
+Other Information
+-----
+
 ### setting a total
 
 The pager does not know how to get a total; please supply the total count in the closure for the call method; 
@@ -123,8 +129,7 @@ $found = $pager->call(
 ```
 
 
-Pagination Component
-----
+### pagination component
 
 To create html pagination component, create an object implementing ToStringInterface and supply it to the pager as;
 
@@ -134,7 +139,7 @@ $pages = $pager->toHtml($pages);
 echo $pages->__toString(); // outputs pagination html
 ```
 
-### pagination for Boostrap CSS
+#### pagination for Boostrap CSS
 
 There are already ToBootstrap class to construct pagination component for Bootstrap. 
 
