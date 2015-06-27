@@ -57,7 +57,7 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
         $inputs = $pager->call(function (Inputs $inputs) {
             $inputs->setTotal(123);
             $inputs->get('none', 'yes');
-            return $inputs;
+            $inputs->setList(['more' => 'test']);
         });
         $this->assertEquals('tested', $inputs->get('test'));
         $this->assertEquals('done', $inputs->get('more'));
@@ -66,6 +66,7 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('20', $inputs->getLimit());
         $this->assertEquals('0', $inputs->getOffset());
         $this->assertEquals(123, $inputs->getTotal());
+        $this->assertEquals(['more' => 'test'], $inputs->getList());
     }
 
     /**
@@ -86,7 +87,6 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
         $pager = $pager->withRequest($req);
         $inputs = $pager->call(function (Inputs $inputs) {
             $inputs->setTotal(123);
-            return $inputs;
         });
         $this->assertEquals('tested', $inputs->get('test'));
         $this->assertEquals('done', $inputs->get('more'));
@@ -118,7 +118,6 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
 
         $inputs = $pager->call(function (Inputs $inputs) {
             $inputs->setTotal(123);
-            return $inputs;
         });
         $this->assertEquals('tested', $inputs->get('test'));
         $this->assertEquals('done', $inputs->get('more'));
@@ -147,7 +146,6 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
 
         $inputs = $pager->call(function (Inputs $inputs) {
             $inputs->setTotal(123);
-            return $inputs;
         });
         $this->assertEquals('tested', $inputs->get('test'));
         $this->assertEquals('done', $inputs->get('more'));

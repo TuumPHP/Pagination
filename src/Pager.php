@@ -172,13 +172,14 @@ class Pager
      * 
      * @API
      * @param \Closure $closure
-     * @return mixed
+     * @return Inputs
      */
     public function call($closure)
     {
         $inputs = $this->forgeInputs();
         $this->inputObject = $inputs;
-        return $closure($inputs);
+        $closure($inputs);
+        return $this->inputObject;
     }
 
     /**
