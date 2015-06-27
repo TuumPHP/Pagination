@@ -34,6 +34,8 @@ abstract class AbstractBootstrap
      * @var string
      */
     public $ul_class = 'pagination';
+    
+    public $default_type = 'disable';
 
     /**
      * @API
@@ -62,14 +64,6 @@ abstract class AbstractBootstrap
         }
 
         return "<ul class=\"{$this->ul_class}\">\n{$html}</ul>\n";
-    }
-
-    /**
-     * @return string
-     */
-    protected function getRequestUri()
-    {
-        return $this->path . '?';
     }
 
     /**
@@ -112,8 +106,9 @@ abstract class AbstractBootstrap
      * @param string $type
      * @return string
      */
-    protected function bootLi($label, $page, $type = 'disable')
+    protected function bootLi($label, $page, $type = null)
     {
+        $type  = $type ?: $this->default_type;
         $label = isset($this->options[$label]) ? $this->options[$label] : $label;
         if (isset($this->sr_label[$label])) {
             $srLbl = " aria-label=\"{$this->sr_label[$label]}\"";
@@ -125,6 +120,8 @@ abstract class AbstractBootstrap
             $html .= $srLbl. " >{$label}</a></li>\n";
         } elseif ($type == 'disable') {
             $html = "<li class='disabled'><a href='#' >{$label}</a></li>\n";
+        } elseif ($type == 'none') {
+            $html = '';
         } else {
             $html = "<li class='active'><a href='#' >{$label}</a></li>\n";
         }
