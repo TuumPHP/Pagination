@@ -202,6 +202,7 @@ class Pager
         $inputs           = new Inputs($this->inputs);
         $inputs->pagerKey = $this->pagerKey;
         $inputs->limitKey = $this->limitKey;
+        $inputs->path     = $this->path;
 
         return $inputs;
     }
