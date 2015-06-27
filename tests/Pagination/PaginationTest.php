@@ -62,10 +62,11 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('tested', $inputs->get('test'));
         $this->assertEquals('done', $inputs->get('more'));
         $this->assertEquals('yes', $inputs->get('none'));
-        $this->assertEquals('1', $inputs->getCurrPage());
+        $this->assertEquals('1', $inputs->getPage());
         $this->assertEquals('20', $inputs->getLimit());
         $this->assertEquals('0', $inputs->getOffset());
         $this->assertEquals(123, $inputs->getTotal());
+        $this->assertEquals(1, $inputs->getCount());
         $this->assertEquals(['more' => 'test'], $inputs->getList());
     }
 
@@ -90,10 +91,11 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
         });
         $this->assertEquals('tested', $inputs->get('test'));
         $this->assertEquals('done', $inputs->get('more'));
-        $this->assertEquals('2', $inputs->getCurrPage());
+        $this->assertEquals('2', $inputs->getPage());
         $this->assertEquals('20', $inputs->getLimit());
         $this->assertEquals('20', $inputs->getOffset());
         $this->assertEquals(123, $inputs->getTotal());
+        $this->assertEquals(0, $inputs->getCount());
     }
 
     /**
@@ -121,7 +123,7 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
         });
         $this->assertEquals('tested', $inputs->get('test'));
         $this->assertEquals('done', $inputs->get('more'));
-        $this->assertEquals('2', $inputs->getCurrPage());
+        $this->assertEquals('2', $inputs->getPage());
         $this->assertEquals('20', $inputs->getLimit());
         $this->assertEquals('20', $inputs->getOffset());
         $this->assertEquals(123, $inputs->getTotal());
@@ -149,7 +151,7 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
         });
         $this->assertEquals('tested', $inputs->get('test'));
         $this->assertEquals('done', $inputs->get('more'));
-        $this->assertEquals('2', $inputs->getCurrPage());
+        $this->assertEquals('2', $inputs->getPage());
         $this->assertEquals('20', $inputs->getLimit());
         $this->assertEquals('20', $inputs->getOffset());
         $this->assertEquals(123, $inputs->getTotal());

@@ -46,7 +46,7 @@ abstract class AbstractBootstrap
         $self           = clone($this);
         $self->path     = $path;
         $self->inputs   = $inputs;
-        $self->currPage = $inputs->getCurrPage();
+        $self->currPage = $inputs->getPage();
         return $self;
     }
 
@@ -110,7 +110,7 @@ abstract class AbstractBootstrap
     protected function calculatePagination($numLinks = 5)
     {
         $lastPage = $this->findLastPage($numLinks);
-        $currPage = $this->inputs->getCurrPage();
+        $currPage = $this->inputs->getPage();
 
         $pages   = [];
         $pages[] = ['label' => 'first', 'page' => 1]; // top
