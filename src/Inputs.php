@@ -34,6 +34,11 @@ class Inputs
     private $inputs = [];
 
     /**
+     * @var ToStringInterface
+     */
+    private $toHtml;
+    
+    /**
      * @param array $inputs
      */
     public function __construct($inputs)
@@ -197,5 +202,29 @@ class Inputs
         }
         $page = (int) $page;
         return $this->path . '?' . $this->pagerKey . '=' . $page;
+    }
+
+    /**
+     * set up ToStringInterface objects to output html pagination.
+     *
+     * @API
+     * @param ToStringInterface $html
+     * @return ToStringInterface
+     */
+    public function toHtml($html)
+    {
+        $this->toHtml = $html->withRequestAndInputs($this->path, $this);
+        return $this->toHtml;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        if (!isset($this->toHtml)) {
+            return '';
+        }
+        return $this->toHtml->__toString();
     }
 }

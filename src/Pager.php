@@ -34,14 +34,6 @@ class Pager
     private $inputs = [];
 
     /**
-     * object representation of the input query for pager. 
-     * will instantiated after call method. 
-     * 
-     * @var Inputs
-     */
-    private $inputObject;
-
-    /**
      * default values. 
      * 
      * @var array
@@ -177,22 +169,8 @@ class Pager
     public function call($closure)
     {
         $inputs = $this->forgeInputs();
-        $this->inputObject = $inputs;
         $closure($inputs);
-        return $this->inputObject;
-    }
-
-    /**
-     * set up ToStringInterface objects to output html pagination. 
-     * 
-     * @API
-     * @param ToStringInterface $html
-     * @return ToStringInterface
-     */
-    public function toHtml($html)
-    {
-        $inputs = $this->inputObject ?: $this->forgeInputs();
-        return $html->withRequestAndInputs($this->path, $inputs);
+        return $inputs;
     }
 
     /**

@@ -69,7 +69,7 @@ The page key, `_page`, is the key.
 
 ### initial query
 
-Construct a query form **without _page key**. 
+Construct a query form **without `_page` key**. 
 
 ```html
 <form>
@@ -79,7 +79,7 @@ Construct a query form **without _page key**.
 </form>
 ```
 
-Pager will store the query data (i.e. $_GET) to session for the subsequent requests. The offset will be always 0. 
+Pager will store the query data (i.e. $_GET) to session for the subsequent requests. 
 
 ### query with page number 
 
@@ -95,7 +95,7 @@ For other parameters, such as `type` and `num`, the values are restored from the
 
 ### query with only _page
 
-Get request with _page but no page number will restore the page number and other parameters from the session. For instance, 
+Get request with **`_page` but no page number** will restore the page number and other parameters from the session. For instance, 
 
 ```
 GET /find?_page
@@ -112,7 +112,7 @@ The pager does not know how to get a total; please supply the total count in the
 
 ```php
 // query 
-$found = $pager->call(
+$inputs = $pager->call(
     function(Inputs $inputs) use($pdo) {
         // calculate total
         $inputs->setTotal(
@@ -124,19 +124,19 @@ $found = $pager->call(
                 ->fetchColumn()
         );
         // query the PDO!
-        return $pdo->prepare("...");
+        $inputs->setList($pdo->prepare("..."));
     });
 ```
 
 
 ### pagination component
 
-To create html pagination component, create an object implementing ToStringInterface and supply it to the pager as;
+To create html pagination component, create an object implementing ToStringInterface and supply it to the Inputs object;
 
 ```php
-$pages = new ToHtml;
-$pages = $pager->toHtml($pages);
-echo $pages->__toString(); // outputs pagination html
+$inputs = $pager->call(function($inputs){...});
+$inputs->toHtml(new ToHtml);
+echo $inputs->__toString(); // outputs pagination html
 ```
 
 #### pagination for Boostrap CSS
@@ -144,14 +144,13 @@ echo $pages->__toString(); // outputs pagination html
 There are already ToBootstrap class to construct pagination component for Bootstrap. 
 
 ```php
-$pages = $pager->toHtml(new ToBootstrap([
+$inputs->toHtml(new ToBootstrap([
         'top'       => '&laquo; first',
         'prev'      => '&lt; prev',
         'next'      => 'next &gt;',
         'last'      => 'last &raquo;',
         'num_links' => 3,
 ]));
-echo $pages->__toString(); // outputs pagination html
+echo $inputs->__toString(); // outputs pagination html
 ```
 
-ToBootstrap3 is under construction. 

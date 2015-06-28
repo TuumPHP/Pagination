@@ -21,12 +21,11 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 
         $pager = (new Pager())->withRequest($req);
         $pager = $pager->withRequest($req->withQueryParams(['_page' => 2]));
-        $pager->call(function(Inputs $inputs) {
+        $inputs= $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(200);
-            return $inputs;
         });
-        $pages = $pager->toHtml(new ToBootstrap());
-        $html  = $pages->__toString();
+        $inputs->toHtml(new ToBootstrap());
+        $html  = $inputs->__toString();
         $this->assertContains("<li><a href='/test?_page=1' >&laquo;</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=1' >prev</a></li>", $html);
         $this->assertContains("<li class='active'><a href='#' >2</a></li>", $html);
@@ -47,10 +46,9 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 
         $pager = (new Pager())->withRequest($req);
         $pager = $pager->withRequest($req->withQueryParams(['_page' => 2]));
-        $pager->call(function(Inputs $inputs) {
-            return $inputs;
+        $inputs= $pager->call(function(Inputs $inputs) {
         });
-        $pages = $pager->toHtml(new ToBootstrap());
+        $pages = $inputs->toHtml(new ToBootstrap());
         $html  = $pages->__toString();
         $this->assertContains("<li><a href='/test?_page=1' >&laquo;</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=1' >prev</a></li>", $html);
@@ -71,12 +69,11 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 
         $pager = (new Pager())->withRequest($req);
         $pager = $pager->withRequest($req->withQueryParams(['_page' => 2]));
-        $pager->call(function(Inputs $inputs) {
+        $inputs= $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(35);
-            return $inputs;
         });
         /** @var AbstractBootstrap $pages */
-        $pages = $pager->toHtml(new ToBootstrap());
+        $pages = $inputs->toHtml(new ToBootstrap());
         $pages->default_type = 'none';
         $html  = $pages->__toString();
         $this->assertContains("<li><a href='/test?_page=1' >&laquo;</a></li>", $html);
