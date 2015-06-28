@@ -149,7 +149,7 @@ class Inputs
     /**
      * @return int
      */
-    public function getSelfPage() 
+    public function calcSelfPage() 
     {
         return $this->getPage();
     }
@@ -157,7 +157,7 @@ class Inputs
     /**
      * @return int
      */
-    public function getFirstPage() 
+    public function calcFirstPage() 
     {
         return 1;
     }
@@ -165,7 +165,7 @@ class Inputs
     /**
      * @return int
      */
-    public function getLastPage() 
+    public function calcLastPage() 
     {
         $total = $this->getTotal();
         if (!$total) {
@@ -178,17 +178,17 @@ class Inputs
     /**
      * @return int
      */
-    public function getNextPage() 
+    public function calcNextPage() 
     {
-        return min($this->getPage() + 1, $this->getLastPage() );
+        return min($this->getPage() + 1, $this->calcLastPage() );
     }
 
     /**
      * @return int
      */
-    public function getPrevPage() 
+    public function calcPrevPage() 
     {
-        return max($this->getPage() - 1, $this->getFirstPage());
+        return max($this->getPage() - 1, $this->calcFirstPage());
     }
 
     /**
