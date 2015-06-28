@@ -36,7 +36,7 @@ class Inputs
     /**
      * @var ToStringInterface
      */
-    private $toHtml;
+    public $toHtml;
     
     /**
      * @param array $inputs
