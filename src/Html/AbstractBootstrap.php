@@ -72,8 +72,8 @@ abstract class AbstractBootstrap
      */
     protected function fillPages($numLinks)
     {
-        $start = max($this->currPage - $numLinks, $this->inputs->getFirstPage());
-        $last  = min($this->currPage + $numLinks, $this->inputs->getLastPage());
+        $start = max($this->currPage - $numLinks, $this->inputs->calcFirstPage());
+        $last  = min($this->currPage + $numLinks, $this->inputs->calcLastPage());
 
         $pages = [];
         for ($page = $start; $page <= $last; $page++) {
@@ -89,14 +89,14 @@ abstract class AbstractBootstrap
     protected function calculatePagination($numLinks = 5)
     {
         $pages   = [];
-        $pages[] = ['label' => 'first', 'page' => $this->inputs->getFirstPage()]; // top
-        $pages[] = ['label' => 'prev',  'page' => $this->inputs->getPrevPage()]; // prev
+        $pages[] = ['label' => 'first', 'page' => $this->inputs->calcFirstPage()]; // top
+        $pages[] = ['label' => 'prev',  'page' => $this->inputs->calcPrevPage()]; // prev
 
         // list of pages, from $start till $last.
         $pages   = array_merge($pages, $this->fillPages($numLinks));
 
-        $pages[] = ['label' => 'next', 'page' => $this->inputs->getNextPage()]; // next
-        $pages[] = ['label' => 'last', 'page' => $this->inputs->getLastPage()]; // last
+        $pages[] = ['label' => 'next', 'page' => $this->inputs->calcNextPage()]; // next
+        $pages[] = ['label' => 'last', 'page' => $this->inputs->calcLastPage()]; // last
         return $pages;
     }
 
