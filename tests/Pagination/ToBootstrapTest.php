@@ -1,23 +1,20 @@
 <?php
 namespace tests\Pagination;
 
-use tests\Utils\Segment;
 use Tuum\Respond\RequestHelper;
 use WScore\Pagination\Html\AbstractBootstrap;
 use WScore\Pagination\Inputs;
 use WScore\Pagination\Pager;
 use WScore\Pagination\Html\ToBootstrap;
 
-class HtmlTest extends \PHPUnit_Framework_TestCase
+class ToBootstrapTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
      */
     function get_bootstrap_style_html()
     {
-        $session = new Segment();
         $req = RequestHelper::createFromPath('/test');
-        $req = RequestHelper::withSessionMgr($req, $session);
 
         $pager = (new Pager())->withRequest($req);
         $pager = $pager->withRequest($req->withQueryParams(['_page' => 2]));
@@ -40,9 +37,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
      */
     function without_total()
     {
-        $session = new Segment();
         $req = RequestHelper::createFromPath('/test');
-        $req = RequestHelper::withSessionMgr($req, $session);
 
         $pager = (new Pager())->withRequest($req);
         $pager = $pager->withRequest($req->withQueryParams(['_page' => 2]));
@@ -63,9 +58,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
      */
     function use_default_type()
     {
-        $session = new Segment();
         $req = RequestHelper::createFromPath('/test');
-        $req = RequestHelper::withSessionMgr($req, $session);
 
         $pager = (new Pager())->withRequest($req);
         $pager = $pager->withRequest($req->withQueryParams(['_page' => 2]));
