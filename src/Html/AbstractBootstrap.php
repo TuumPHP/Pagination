@@ -34,7 +34,12 @@ abstract class AbstractBootstrap
     /**
      * @var array
      */
-    protected $aria_label = [];
+    public $aria_label = [
+        'first' => 'first page',
+        'prev'  => 'previous page',
+        'next'  => 'next page',
+        'last'  => 'last page',
+    ];
 
     /**
      * @var string

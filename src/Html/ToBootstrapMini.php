@@ -13,24 +13,6 @@ use WScore\Pagination\ToStringInterface;
 class ToBootstrapMini extends AbstractBootstrap implements ToStringInterface
 {
     /**
-     * @var array
-     */
-    protected $options = [
-        'first'     => '&laquo;',
-        'prev'      => 'prev',
-        'next'      => 'next',
-        'last'      => '&raquo;',
-        'num_links' => 5,
-    ];
-
-    public $aria_label = [
-        'first' => 'first page',
-        'prev'  => 'previous page',
-        'next'  => 'next page',
-        'last'  => 'last page',
-    ];
-
-    /**
      * @return array
      */
     public function toArray()
