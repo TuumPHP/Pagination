@@ -23,12 +23,18 @@ abstract class AbstractBootstrap
     /**
      * @var array
      */
-    protected $options = [];
-
+    protected $options = [
+        'first'     => '&laquo;',
+        'prev'      => 'prev',
+        'next'      => 'next',
+        'last'      => '&raquo;',
+        'num_links' => 5,
+    ];
+    
     /**
      * @var array
      */
-    protected $sr_label = [];
+    protected $aria_label = [];
 
     /**
      * @var string
@@ -37,11 +43,19 @@ abstract class AbstractBootstrap
     
     public $default_type = 'disable';
 
+
     /**
-     * @param int $numLinks
+     * @param array $options
+     */
+    public function __construct($options = [])
+    {
+        $this->options = $options + $this->options;
+    }
+    
+    /**
      * @return array
      */
-    abstract protected function calculatePagination($numLinks = 5);
+    abstract public function toArray();
     
     /**
      * @API
@@ -63,7 +77,7 @@ abstract class AbstractBootstrap
      */
     public function __toString()
     {
-        $pages = $this->calculatePagination($this->options['num_links']);
+        $pages = $this->toArray();
         $html  = '';
         foreach ($pages as $info) {
             $html .= $this->listItem($info);
@@ -83,37 +97,45 @@ abstract class AbstractBootstrap
 
         $pages = [];
         for ($page = $start; $page <= $last; $page++) {
-            $pages[$page] = ['label' => $page, 'page' => $page, 'type' => 'active'];
+            $pages[$page] = ['rel' => $page, 'page' => $page, 'type' => 'active'];
         }
         return $pages;
     }
 
     /**
-     * @param string $label
+     * @param string $rel
      * @param int    $page
      * @param string $type
+     * @param string $aria
      * @return string
      */
-    protected function bootLi($label, $page, $type = null)
+    protected function bootLi($rel, $page, $type, $aria)
     {
         $type  = $type ?: $this->default_type;
-        $label = isset($this->options[$label]) ? $this->options[$label] : $label;
-        if (isset($this->sr_label[$label])) {
-            $srLbl = " aria-label=\"{$this->sr_label[$label]}\"";
-        } else {
-            $srLbl = '';
-        }
+        $label = isset($this->options[$rel]) ? $this->options[$rel] : $rel;
+        $srLbl = $aria ? " aria-label=\"{$aria}\"" : '';
         if ($page != $this->currPage) {
             $html = "<li><a href='{$this->inputs->getPath($page)}'";
             $html .= $srLbl. " >{$label}</a></li>\n";
         } elseif ($type == 'disable') {
             $html = "<li class='disabled'><a href='#' >{$label}</a></li>\n";
-        } elseif ($type == 'none') {
-            $html = '';
         } else {
             $html = "<li class='active'><a href='#' >{$label}</a></li>\n";
         }
         return $html;
+    }
+
+    /**
+     * @param array $pages
+     * @return array
+     */
+    protected function addAriaLabel(array $pages)
+    {
+        foreach($pages as $key => $page) {
+            $rel = $page['rel'];
+            $pages[$key]['aria'] = isset($this->aria_label[$rel]) ? $this->aria_label[$rel] : '';
+        }
+        return $pages;
     }
 
     /**
@@ -122,10 +144,11 @@ abstract class AbstractBootstrap
      */
     protected function listItem(array $info)
     {
-        $label = isset($info['label']) ? $info['label'] : '';
+        $label = isset($info['rel']) ? $info['rel'] : '';
         $page  = isset($info['page']) ? $info['page'] : '';
         $type  = isset($info['type']) ? $info['type'] : '';
-        return $this->bootLi($label, $page, $type);
+        $aria  = isset($info['aria']) ? $info['aria'] : '';
+        return $this->bootLi($label, $page, $type, $aria);
     }
 
 }

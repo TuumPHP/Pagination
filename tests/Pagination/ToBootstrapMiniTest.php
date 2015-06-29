@@ -25,7 +25,7 @@ class ToBootstrapMiniTest extends \PHPUnit_Framework_TestCase
         $this->assertContains("<li class='active'><a href='#' >2</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=3' >3</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=7' >7</a></li>", $html);
-        $this->assertContains("<li><a href='/test?_page=10' >&raquo;</a></li>", $html);
+        $this->assertContains("<li><a href='/test?_page=10' aria-label=\"last page\" >&raquo;</a></li>", $html);
     }
 
     /**
@@ -42,10 +42,10 @@ class ToBootstrapMiniTest extends \PHPUnit_Framework_TestCase
         });
         $inputs->toHtml(new ToBootstrapMini(['num_links' => 2]));
         $html  = $inputs->__toString();
-        $this->assertContains("<li><a href='/test?_page=1' >&laquo;</a></li>", $html);
+        $this->assertContains("<li><a href='/test?_page=1' aria-label=\"first page\" >&laquo;</a></li>", $html);
         $this->assertContains("<li class='active'><a href='#' >4</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=2' >2</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=6' >6</a></li>", $html);
-        $this->assertContains("<li><a href='/test?_page=10' >&raquo;</a></li>", $html);
+        $this->assertContains("<li><a href='/test?_page=10' aria-label=\"last page\" >&raquo;</a></li>", $html);
     }
 }

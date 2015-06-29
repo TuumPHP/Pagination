@@ -23,7 +23,7 @@ class ToBootstrapNext extends AbstractBootstrap implements ToStringInterface
         'num_links' => 5,
     ];
 
-    public $sr_label = [
+    public $aria_label = [
         'first' => 'first page',
         'prev'  => 'previous page',
         'next'  => 'next page',
@@ -31,24 +31,25 @@ class ToBootstrapNext extends AbstractBootstrap implements ToStringInterface
     ];
 
     /**
-     * @param int $numLinks
      * @return array
      */
-    protected function calculatePagination($numLinks = 5)
+    public function toArray()
     {
+        $numLinks = $this->options['num_links'];
+
         // list of pages, from $start till $last.
         $page_list = $this->fillUpToPages($numLinks);
 
         $pages = [];
         if (!isset($page_list[$this->inputs->calcFirstPage()])) {
-            $pages[] = ['label' => 'first', 'page' => $this->inputs->calcFirstPage()]; // top
+            $pages[] = ['rel' => 'first', 'page' => $this->inputs->calcFirstPage()]; // top
         }
         $pages = array_merge($pages, $page_list);
         if (!isset($page_list[$this->inputs->calcNextPage()])) {
-            $pages[] = ['label' => 'next', 'page' => $this->inputs->calcNextPage()]; // top
+            $pages[] = ['rel' => 'next', 'page' => $this->inputs->calcNextPage()]; // top
         }
 
-        return $pages;
+        return $this->addAriaLabel($pages);
     }
     
     protected function fillUpToPages($numLinks)
@@ -58,7 +59,7 @@ class ToBootstrapNext extends AbstractBootstrap implements ToStringInterface
 
         $pages = [];
         for ($page = $start; $page <= $last; $page++) {
-            $pages[$page] = ['label' => $page, 'page' => $page, 'type' => 'active'];
+            $pages[$page] = ['rel' => $page, 'page' => $page, 'type' => 'active'];
         }
         return $pages;
     }

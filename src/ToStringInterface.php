@@ -18,6 +18,12 @@ interface ToStringInterface
 
     /**
      * @API
+     * @return array
+     */
+    public function toArray();
+
+    /**
+     * @API
      * @return string
      */
     public function __toString();
