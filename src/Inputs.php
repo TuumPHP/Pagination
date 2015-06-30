@@ -1,6 +1,8 @@
 <?php
 namespace WScore\Pagination;
 
+use WScore\Pagination\Html\ToStringInterface;
+
 class Inputs
 {
     /**

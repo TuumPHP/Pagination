@@ -2,7 +2,6 @@
 namespace WScore\Pagination\Html;
 
 use WScore\Pagination\Inputs;
-use WScore\Pagination\ToStringInterface;
 
 abstract class AbstractBootstrap implements ToStringInterface
 {

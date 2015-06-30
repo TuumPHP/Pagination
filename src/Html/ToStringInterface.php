@@ -1,5 +1,7 @@
 <?php
-namespace WScore\Pagination;
+namespace WScore\Pagination\Html;
+
+use WScore\Pagination\Inputs;
 
 /**
  * Created by PhpStorm.
