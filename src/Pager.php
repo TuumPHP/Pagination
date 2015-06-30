@@ -146,7 +146,12 @@ class Pager
      */
     private function loadFromSession($query)
     {
-        $loaded = array_key_exists($this->name, $_SESSION) ? $_SESSION[$this->name] : [];
+        if (isset($_SESSION) && array_key_exists($this->name, $_SESSION)) {
+            $loaded = $_SESSION[$this->name];
+        } else {
+            // no session. just use the $query.
+            return $this->secureInput($query);
+        }
         // check if _page is specified in $query. if so, replace it with the saved value.
         if (isset($query[$this->pagerKey]) && $query[$this->pagerKey] >= 1) {
             $loaded[$this->pagerKey] = (int)$query[$this->pagerKey];
