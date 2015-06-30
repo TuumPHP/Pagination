@@ -7,6 +7,8 @@ a generic pagination class for PSR-7 and others.
 
 MIT license
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/WScore/Pagination/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/WScore/Pagination/?branch=master)
+
 Getting Started
 ----
 
