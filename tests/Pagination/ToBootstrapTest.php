@@ -2,7 +2,6 @@
 namespace tests\Pagination;
 
 use Tuum\Respond\RequestHelper;
-use WScore\Pagination\Html\AbstractPaginate;
 use WScore\Pagination\Html\Paginate;
 use WScore\Pagination\Inputs;
 use WScore\Pagination\Pager;
@@ -65,9 +64,7 @@ class ToBootstrapTest extends \PHPUnit_Framework_TestCase
         $inputs= $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(35);
         });
-        /** @var AbstractPaginate $pages */
         $pages = $inputs->paginate(new Paginate());
-        $pages->default_type = 'none';
         $html  = $pages->__toString();
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"first page\" >&laquo;</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"previous page\" >prev</a></li>", $html);
