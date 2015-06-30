@@ -44,16 +44,16 @@ abstract class AbstractPaginate implements PaginateInterface
     {
         $this->toHtml = $toHtml ?: new ToHtmlBootstrap();
     }
-    
+
     /**
      * @return array
      */
     abstract public function toArray();
-    
+
     /**
      * @API
-     * @param string   $path
-     * @param Inputs                 $inputs
+     * @param string $path
+     * @param Inputs $inputs
      * @return $this
      */
     public function withRequestAndInputs($path, $inputs)
@@ -81,8 +81,8 @@ abstract class AbstractPaginate implements PaginateInterface
     {
         $numLinks = $this->num_links;
         $currPage = $this->inputs->getPage();
-        $start = max($currPage - $numLinks, $this->inputs->calcFirstPage());
-        $last  = min($currPage + $numLinks, $this->inputs->calcLastPage());
+        $start    = max($currPage - $numLinks, $this->inputs->calcFirstPage());
+        $last     = min($currPage + $numLinks, $this->inputs->calcLastPage());
 
         $pages = [];
         for ($page = $start; $page <= $last; $page++) {
@@ -98,7 +98,7 @@ abstract class AbstractPaginate implements PaginateInterface
     protected function constructPage($page)
     {
         if (!is_numeric($page) && is_string($page)) {
-            $method = 'calc'.ucwords($page).'Page';
+            $method  = 'calc' . ucwords($page) . 'Page';
             $pageNum = $this->inputs->$method();
         } else {
             $pageNum = $page;
@@ -115,8 +115,8 @@ abstract class AbstractPaginate implements PaginateInterface
     protected function href($page)
     {
         if (!is_numeric($page) && is_string($page)) {
-            $method = 'calc'.ucwords($page).'Page';
-            $page = $this->inputs->$method();
+            $method = 'calc' . ucwords($page) . 'Page';
+            $page   = $this->inputs->$method();
         }
         return $this->inputs->getPath($page);
     }
@@ -127,8 +127,8 @@ abstract class AbstractPaginate implements PaginateInterface
      */
     protected function addAriaLabel(array $pages)
     {
-        foreach($pages as $key => $page) {
-            $rel = $page['rel'];
+        foreach ($pages as $key => $page) {
+            $rel                 = $page['rel'];
             $pages[$key]['aria'] = isset($this->aria_label[$rel]) ? $this->aria_label[$rel] : '';
         }
         return $pages;

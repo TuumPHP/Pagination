@@ -39,7 +39,7 @@ class Inputs
      * @var PaginateInterface
      */
     public $toHtml;
-    
+
     /**
      * @param array $inputs
      */
@@ -49,8 +49,8 @@ class Inputs
     }
 
     /**
-     * get the limit, i.e. number of data per page. 
-     * 
+     * get the limit, i.e. number of data per page.
+     *
      * @return int
      */
     public function getLimit()
@@ -59,8 +59,8 @@ class Inputs
     }
 
     /**
-     * get the offset for retrieving data. 
-     * 
+     * get the offset for retrieving data.
+     *
      * @return int
      */
     public function getOffset()
@@ -69,8 +69,8 @@ class Inputs
     }
 
     /**
-     * get the current page number, starting from 1. 
-     * 
+     * get the current page number, starting from 1.
+     *
      * @return int
      */
     public function getPage()
@@ -79,8 +79,8 @@ class Inputs
     }
 
     /**
-     * get any key from query. 
-     * 
+     * get any key from query.
+     *
      * @param string     $key
      * @param null|mixed $alt
      * @return null|mixed
@@ -93,20 +93,20 @@ class Inputs
     }
 
     /**
-     * get total number of data. 
+     * get total number of data.
      * - total: number of all the possible data which can be retrieved.
-     * - count: number of data in the current list. 
-     * 
+     * - count: number of data in the current list.
+     *
      * @return int|null
      */
     public function getTotal()
     {
-        return array_key_exists($this->totalKey, $this->inputs) ? (int) $this->inputs[$this->totalKey]: null;
+        return array_key_exists($this->totalKey, $this->inputs) ? (int)$this->inputs[$this->totalKey] : null;
     }
 
     /**
      * set the total of data.
-     * 
+     *
      * @param int|null $total
      */
     public function setTotal($total)
@@ -115,8 +115,8 @@ class Inputs
     }
 
     /**
-     * set the data for list. 
-     * 
+     * set the data for list.
+     *
      * @param mixed $list
      */
     public function setList($list)
@@ -126,7 +126,7 @@ class Inputs
 
     /**
      * get the data for list.
-     * 
+     *
      * @return null|mixed
      */
     public function getList()
@@ -135,9 +135,9 @@ class Inputs
     }
 
     /**
-     * get the count, i.e. number of data in the current list. 
-     * count is the number of data in the current list. 
-     * 
+     * get the count, i.e. number of data in the current list.
+     * count is the number of data in the current list.
+     *
      * @return int
      */
     public function getCount()
@@ -151,7 +151,7 @@ class Inputs
     /**
      * @return int
      */
-    public function calcSelfPage() 
+    public function calcSelfPage()
     {
         return $this->getPage();
     }
@@ -159,7 +159,7 @@ class Inputs
     /**
      * @return int
      */
-    public function calcFirstPage() 
+    public function calcFirstPage()
     {
         return 1;
     }
@@ -167,7 +167,7 @@ class Inputs
     /**
      * @return int
      */
-    public function calcLastPage() 
+    public function calcLastPage()
     {
         $total = $this->getTotal();
         if (!$total) {
@@ -180,15 +180,15 @@ class Inputs
     /**
      * @return int
      */
-    public function calcNextPage() 
+    public function calcNextPage()
     {
-        return min($this->getPage() + 1, $this->calcLastPage() );
+        return min($this->getPage() + 1, $this->calcLastPage());
     }
 
     /**
      * @return int
      */
-    public function calcPrevPage() 
+    public function calcPrevPage()
     {
         return max($this->getPage() - 1, $this->calcFirstPage());
     }
@@ -197,12 +197,12 @@ class Inputs
      * @param null|int $page
      * @return string
      */
-    public function getPath($page=null)
+    public function getPath($page = null)
     {
         if (is_null($page)) {
             return $this->path;
         }
-        $page = (int) $page;
+        $page = (int)$page;
         return $this->path . '?' . $this->pagerKey . '=' . $page;
     }
 

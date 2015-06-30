@@ -29,12 +29,12 @@ class PaginateNext extends AbstractPaginate
 
         return $this->addAriaLabel($pages);
     }
-    
+
     protected function fillUpToPages()
     {
         $numLinks = $this->num_links;
-        $start = max($this->inputs->calcSelfPage() - $numLinks, $this->inputs->calcFirstPage());
-        $last  = $this->inputs->calcSelfPage();
+        $start    = max($this->inputs->calcSelfPage() - $numLinks, $this->inputs->calcFirstPage());
+        $last     = $this->inputs->calcSelfPage();
 
         $pages = [];
         for ($page = $start; $page <= $last; $page++) {

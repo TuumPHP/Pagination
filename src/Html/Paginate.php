@@ -13,7 +13,7 @@ class Paginate extends AbstractPaginate
         $pages[] = $this->constructPage('prev');
 
         // list of pages, from $start till $last.
-        $pages   = array_merge($pages, $this->fillPages());
+        $pages = array_merge($pages, $this->fillPages());
 
         $pages[] = $this->constructPage('next');
         $pages[] = $this->constructPage('last');

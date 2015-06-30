@@ -35,7 +35,7 @@ class ToHtmlBootstrap implements ToHtmlInterface
      */
     public function toString(array $pages)
     {
-        $html  = '';
+        $html = '';
         foreach ($pages as $info) {
             $html .= $this->listItem($info);
         }
@@ -67,7 +67,7 @@ class ToHtmlBootstrap implements ToHtmlInterface
         $srLbl = $aria ? " aria-label=\"{$aria}\"" : '';
         if ($href != '#') {
             $html = "<li><a href='{$href}'";
-            $html .= $srLbl. " >{$label}</a></li>\n";
+            $html .= $srLbl . " >{$label}</a></li>\n";
         } elseif (is_numeric($rel)) {
             $html = "<li class='active'><a href='#' >{$label}</a></li>\n";
         } else {

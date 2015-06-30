@@ -14,43 +14,43 @@ class Pager
     public $validator;
 
     /**
-     * name for session storage key. 
-     * 
+     * name for session storage key.
+     *
      * @var string
      */
     private $name;
 
     /**
-     * query key name for setting page number. 
-     * 
+     * query key name for setting page number.
+     *
      * @var string
      */
     private $pagerKey = '_page';
 
     /**
      * query key name for setting limit (per page number).
-     * 
+     *
      * @var string
      */
     private $limitKey = '_limit';
 
     /**
-     * query for pager. maybe get from $_GET, or from session. 
-     * 
+     * query for pager. maybe get from $_GET, or from session.
+     *
      * @var array
      */
     private $inputs = [];
 
     /**
-     * default values. 
-     * 
+     * default values.
+     *
      * @var array
      */
     private $default = [];
 
     /**
-     * path for the query. 
-     * 
+     * path for the query.
+     *
      * @var string
      */
     private $path;
@@ -64,14 +64,14 @@ class Pager
                 $this->pagerKey => 1,
                 $this->limitKey => 20
             ];
-        if (isset($default['validator']) && $default['validator'] instanceof Closure ) {
+        if (isset($default['validator']) && $default['validator'] instanceof Closure) {
             $this->validator = $default['validator'];
         }
     }
 
     /**
      * set up pager using the PSR7 server request.
-     * 
+     *
      * @API
      * @param ServerRequestInterface $request
      * @return $this
@@ -85,14 +85,14 @@ class Pager
     }
 
     /**
-     * set up pager using the query data ($_GET) and pathInfo. 
-     * 
+     * set up pager using the query data ($_GET) and pathInfo.
+     *
      * @API
-     * @param array $query    query like $_GET
-     * @param null  $path     path info
+     * @param array $query query like $_GET
+     * @param null  $path  path info
      * @return Pager
-     */    
-    public function withQuery(array $query, $path=null)
+     */
+    public function withQuery(array $query, $path = null)
     {
         $self = clone($this);
         $path = $path ?: htmlspecialchars($_SERVER['PATH_INFO'], ENT_QUOTES, 'UTF-8');
@@ -100,7 +100,7 @@ class Pager
         $self->loadPageKey($query);
         return $self;
     }
-    
+
     /**
      * set query input data based on $query, or from session.
      *
@@ -126,10 +126,10 @@ class Pager
      */
     private function secureInput(array $query)
     {
-        $secure = $this->validator ?: function(&$v) {
+        $secure = $this->validator ?: function (&$v) {
             if (strpos($v, "\0") !== false) {
                 $v = '';
-            } elseif( !mb_check_encoding($v, 'UTF-8')) {
+            } elseif (!mb_check_encoding($v, 'UTF-8')) {
                 $v = '';
             }
         };
@@ -172,8 +172,8 @@ class Pager
     }
 
     /**
-     * call to construct your query based on the pager's input. 
-     * 
+     * call to construct your query based on the pager's input.
+     *
      * @API
      * @param \Closure $closure
      * @return Inputs
