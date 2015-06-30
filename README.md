@@ -36,16 +36,14 @@ $pager = $pager->withRequest($request);
 $pager = $pager->withQuery($_GET, '/find');
 ```
 
-Then, call a query with `Pager::call` method and a `closure`. 
+Then, call a `Pager::call` method with a `closure` whose first argument is an `Inputs` object. 
 
 ```php
 // query 
 $inputs = $pager->call(
     function(Inputs $inputs) use($pdo) {
         // query the PDO!
-        $found = $pdo->prepare("
-            SELECT * FROM tbl WHERE type=? and num>? OFFSET ? LIMIT ?
-            ")
+        $found = $pdo->prepare("SELECT * FROM tbl WHERE type=? and num>? OFFSET ? LIMIT ?")
             ->execute([
                 $inputs->get('type'),
                 $inputs->get('num'),
@@ -59,10 +57,19 @@ $found = $inputs->getList();
 $type  = $inputs->get('type');
 ```
 
+There is a default bootstrap pagination html. 
+
+```php
+use WScore\Pagination\Html\Paginate;
+
+$inputs->paginate(new Paginate());
+echo $inputs->__toString();
+```
+
 The `$inputs` object holds the information to construct a query. You can return anything from the closure; it will be passed back to you from the `Pager::call` method. 
 
 
-Constructing a HTML Form
+Constructing an HTML Form
 -----
 
 The page key, `_page`, is the key. 
@@ -128,29 +135,100 @@ $inputs = $pager->call(
     });
 ```
 
+### security
 
-### pagination component
+As a default, the input values are validated to contain no nulls as well as a valid UTF-8 string. 
 
-To create html pagination component, create an object implementing ToStringInterface and supply it to the Inputs object;
+To change the validation, you can pass it at the construction of `Pager` as;
 
 ```php
-$inputs = $pager->call(function($inputs){...});
-$inputs->toHtml(new ToHtml);
+$pager = new Pager([
+    'validator' => function(&$v) {
+        $v = 'validate=' . $v;
+    },
+]);
+```
+
+or you can simply set it like,
+
+```php
+$pager->validator = function(&$v) {
+        $v = 'validate=' . $v;
+    },
+]);
+```
+
+FYI: this is the default closure. 
+
+```php
+function (&$v) {
+    if (strpos($v, "\0") !== false) {
+        $v = '';
+    } elseif (!mb_check_encoding($v, 'UTF-8')) {
+        $v = '';
+    }
+};
+```
+
+Output Pagination Html
+----
+
+### `PaginateInterface` interface
+
+To create html pagination component, create an object implementing `PaginateInterface` and supply it to the Inputs object;
+
+```php
+$inputs->paginate(new Pagination);
+```
+
+There are 3 implementations of PaginateInterface:
+
+*   `Paginate`
+*   `PaginateMini`
+*   `PaginateNext`
+
+> TODO: supply sample image of pagination for each class.
+
+#### `PaginateInterface::toArray` method
+
+In PaginateInterface, it uses toArray method to construct an array of pages, which must contain following:
+
+*   `rel`: shows relation to the current page. Either of 'first', 'next', 'prev', 'last', or numeric page numbers. 
+*   `href`: url to the page. 
+*   `aria`: for aria-label.
+
+as such, the array may look like;
+
+```php
+$pages = array(
+    ['rel' => 'first', 'href' => '/t?_page=1', 'aria' => 'first page'],
+    ...
+);
+```
+
+#### `PaginateInterface::__toString` method
+
+The `__toString` method converts the array from `toArray` method to HTML using an object implementing `ToHtmlInterface`. The `ToHtmlBootstrap` class is used as a default which converts array into HTML for Bootstrap CSS. 
+
+To use other HTML/CSS style, provide an object implementing the `ToHtmlInterface`, for example `ToMyHtml`, as;
+
+
+```php
+$inputs->paginate(new PaginateMini(new ToMyHtml()));
 echo $inputs->__toString(); // outputs pagination html
 ```
 
-#### pagination for Boostrap CSS
+### modifying `Paginate` object
 
-There are already ToBootstrap class to construct pagination component for Bootstrap. 
+Many of the configuration of Paginate objects can be done by accessing public properties. 
+
+To change the default number of pages in Pagination, do as follows; 
 
 ```php
-$inputs->toHtml(new ToBootstrap([
-        'top'       => '&laquo; first',
-        'prev'      => '&lt; prev',
-        'next'      => 'next &gt;',
-        'last'      => 'last &raquo;',
-        'num_links' => 3,
-]));
-echo $inputs->__toString(); // outputs pagination html
+$paginate = new Paginate();
+$paginate->num_links = 2;
+$paginate->aria_label = [
+    'first' => '最初', // in Japanese
+];
+$inputs->paginate($paginate);
 ```
-
