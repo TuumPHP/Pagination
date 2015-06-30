@@ -40,7 +40,9 @@ class ToBootstrapMiniTest extends \PHPUnit_Framework_TestCase
         $inputs= $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(200);
         });
-        $inputs->toHtml(new ToBootstrapMini(['num_links' => 2]));
+        $toHtml = new ToBootstrapMini();
+        $toHtml->num_links = 2;
+        $inputs->toHtml($toHtml);
         $html  = $inputs->__toString();
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"first page\" >&laquo;</a></li>", $html);
         $this->assertContains("<li class='active'><a href='#' >4</a></li>", $html);

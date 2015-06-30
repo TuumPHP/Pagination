@@ -37,7 +37,9 @@ class ToBootstrapNextTest extends \PHPUnit_Framework_TestCase
         $inputs= $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(200);
         });
-        $inputs->toHtml(new ToBootstrapNext(['num_links' => 2]));
+        $toHtml = new ToBootstrapNext();
+        $toHtml->num_links = 2;
+        $inputs->toHtml($toHtml);
         $html  = $inputs->__toString();
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"first page\" >&laquo;</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=3' >3</a></li>", $html);

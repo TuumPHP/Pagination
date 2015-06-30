@@ -1,8 +1,6 @@
 <?php
 namespace WScore\Pagination\Html;
 
-use WScore\Pagination\ToStringInterface;
-
 /**
  * Class ToBootstrap3
  *
@@ -10,17 +8,15 @@ use WScore\Pagination\ToStringInterface;
  *
  * @package WScore\Pagination\Html
  */
-class ToBootstrapNext extends AbstractBootstrap implements ToStringInterface
+class ToBootstrapNext extends AbstractBootstrap
 {
     /**
      * @return array
      */
     public function toArray()
     {
-        $numLinks = $this->options['num_links'];
-
         // list of pages, from $start till $last.
-        $page_list = $this->fillUpToPages($numLinks);
+        $page_list = $this->fillUpToPages();
 
         $pages = [];
         if (!isset($page_list[$this->inputs->calcFirstPage()])) {
@@ -34,8 +30,9 @@ class ToBootstrapNext extends AbstractBootstrap implements ToStringInterface
         return $this->addAriaLabel($pages);
     }
     
-    protected function fillUpToPages($numLinks)
+    protected function fillUpToPages()
     {
+        $numLinks = $this->num_links;
         $start = max($this->inputs->calcSelfPage() - $numLinks, $this->inputs->calcFirstPage());
         $last  = $this->inputs->calcSelfPage();
 
@@ -44,13 +41,5 @@ class ToBootstrapNext extends AbstractBootstrap implements ToStringInterface
             $pages[$page] = $this->constructPage($page);
         }
         return $pages;
-    }
-    
-    /**
-     * @param array $options
-     */
-    public function __construct($options = [])
-    {
-        $this->options = $options + $this->options;
     }
 }
