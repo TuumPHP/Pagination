@@ -4,17 +4,16 @@ namespace WScore\Pagination\Html;
 use WScore\Pagination\Inputs;
 
 /**
- * Created by PhpStorm.
- * User: asao
- * Date: 15/06/19
- * Time: 12:54
+ * Interface PaginateInterface
+ *
+ * @package WScore\Pagination\Html
  */
-interface ToStringInterface
+interface PaginateInterface
 {
     /**
      * @param string $path
      * @param Inputs $inputs
-     * @return ToStringInterface
+     * @return PaginateInterface
      */
     public function withRequestAndInputs($path, $inputs);
 

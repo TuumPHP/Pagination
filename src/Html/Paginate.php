@@ -1,7 +1,7 @@
 <?php
 namespace WScore\Pagination\Html;
 
-class ToBootstrap extends AbstractBootstrap
+class Paginate extends AbstractPaginate
 {
     /**
      * @return array

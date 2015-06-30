@@ -3,7 +3,7 @@ namespace WScore\Pagination\Html;
 
 use WScore\Pagination\Inputs;
 
-abstract class AbstractBootstrap implements ToStringInterface
+abstract class AbstractPaginate implements PaginateInterface
 {
     /**
      * @var string

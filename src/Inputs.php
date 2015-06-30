@@ -1,7 +1,7 @@
 <?php
 namespace WScore\Pagination;
 
-use WScore\Pagination\Html\ToStringInterface;
+use WScore\Pagination\Html\PaginateInterface;
 
 class Inputs
 {
@@ -36,7 +36,7 @@ class Inputs
     private $inputs = [];
 
     /**
-     * @var ToStringInterface
+     * @var PaginateInterface
      */
     public $toHtml;
     
@@ -210,10 +210,10 @@ class Inputs
      * set up ToStringInterface objects to output html pagination.
      *
      * @API
-     * @param ToStringInterface $html
-     * @return ToStringInterface
+     * @param PaginateInterface $html
+     * @return PaginateInterface
      */
-    public function toHtml($html)
+    public function paginate($html)
     {
         $this->toHtml = $html->withRequestAndInputs($this->path, $this);
         return $this->toHtml;

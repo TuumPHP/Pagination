@@ -2,10 +2,10 @@
 namespace tests\Pagination;
 
 use Tuum\Respond\RequestHelper;
-use WScore\Pagination\Html\AbstractBootstrap;
+use WScore\Pagination\Html\AbstractPaginate;
+use WScore\Pagination\Html\Paginate;
 use WScore\Pagination\Inputs;
 use WScore\Pagination\Pager;
-use WScore\Pagination\Html\ToBootstrap;
 
 class ToBootstrapTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,7 +21,7 @@ class ToBootstrapTest extends \PHPUnit_Framework_TestCase
         $inputs= $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(200);
         });
-        $inputs->toHtml(new ToBootstrap());
+        $inputs->paginate(new Paginate());
         $html  = $inputs->__toString();
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"first page\" >&laquo;</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"previous page\" >prev</a></li>", $html);
@@ -43,7 +43,7 @@ class ToBootstrapTest extends \PHPUnit_Framework_TestCase
         $pager = $pager->withRequest($req->withQueryParams(['_page' => 2]));
         $inputs= $pager->call(function(Inputs $inputs) {
         });
-        $pages = $inputs->toHtml(new ToBootstrap());
+        $pages = $inputs->paginate(new Paginate());
         $html  = $pages->__toString();
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"first page\" >&laquo;</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"previous page\" >prev</a></li>", $html);
@@ -65,8 +65,8 @@ class ToBootstrapTest extends \PHPUnit_Framework_TestCase
         $inputs= $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(35);
         });
-        /** @var AbstractBootstrap $pages */
-        $pages = $inputs->toHtml(new ToBootstrap());
+        /** @var AbstractPaginate $pages */
+        $pages = $inputs->paginate(new Paginate());
         $pages->default_type = 'none';
         $html  = $pages->__toString();
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"first page\" >&laquo;</a></li>", $html);

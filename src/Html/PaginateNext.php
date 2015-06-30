@@ -8,7 +8,7 @@ namespace WScore\Pagination\Html;
  *
  * @package WScore\Pagination\Html
  */
-class ToBootstrapNext extends AbstractBootstrap
+class PaginateNext extends AbstractPaginate
 {
     /**
      * @return array

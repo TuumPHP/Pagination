@@ -2,7 +2,7 @@
 namespace tests\Pagination;
 
 use Tuum\Respond\RequestHelper;
-use WScore\Pagination\Html\ToBootstrapMini;
+use WScore\Pagination\Html\PaginateMini;
 use WScore\Pagination\Inputs;
 use WScore\Pagination\Pager;
 
@@ -20,7 +20,7 @@ class ToBootstrapMiniTest extends \PHPUnit_Framework_TestCase
         $inputs= $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(200);
         });
-        $inputs->toHtml(new ToBootstrapMini());
+        $inputs->paginate(new PaginateMini());
         $html  = $inputs->__toString();
         $this->assertContains("<li class='active'><a href='#' >2</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=3' >3</a></li>", $html);
@@ -40,9 +40,9 @@ class ToBootstrapMiniTest extends \PHPUnit_Framework_TestCase
         $inputs= $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(200);
         });
-        $toHtml = new ToBootstrapMini();
+        $toHtml = new PaginateMini();
         $toHtml->num_links = 2;
-        $inputs->toHtml($toHtml);
+        $inputs->paginate($toHtml);
         $html  = $inputs->__toString();
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"first page\" >&laquo;</a></li>", $html);
         $this->assertContains("<li class='active'><a href='#' >4</a></li>", $html);
