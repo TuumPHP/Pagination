@@ -92,33 +92,30 @@ abstract class AbstractPaginate implements PaginateInterface
     }
 
     /**
+     * @param string $page
+     * @param array  $pages
+     * @param array  $page_list
+     * @return array
+     */
+    protected function constructPageIfNotInPages($page, array $pages, array $page_list)
+    {
+        $pageNum = $this->calcPageNum($page);
+        if (!isset($page_list[$pageNum])) {
+            $pages[] = $this->constructPage($page);
+        }
+        return $pages;
+    }
+
+    /**
      * @param string|int $page
      * @return array
      */
     protected function constructPage($page)
     {
-        if (!is_numeric($page) && is_string($page)) {
-            $method  = 'calc' . ucwords($page) . 'Page';
-            $pageNum = $this->inputs->$method();
-        } else {
-            $pageNum = $page;
-        }
+        $pageNum = $this->calcPageNum($page);
         $href = ($pageNum == $this->inputs->getPage()) ?
             '#' : $this->inputs->getPath($pageNum);
         return ['rel' => $page, 'href' => $href];
-    }
-
-    /**
-     * @param string|int $page
-     * @return string
-     */
-    protected function href($page)
-    {
-        if (!is_numeric($page) && is_string($page)) {
-            $method = 'calc' . ucwords($page) . 'Page';
-            $page   = $this->inputs->$method();
-        }
-        return $this->inputs->getPath($page);
     }
 
     /**
@@ -132,6 +129,22 @@ abstract class AbstractPaginate implements PaginateInterface
             $pages[$key]['aria'] = isset($this->aria_label[$rel]) ? $this->aria_label[$rel] : '';
         }
         return $pages;
+    }
+
+    /**
+     * @param $page
+     * @return int|string
+     */
+    protected function calcPageNum($page)
+    {
+        if (!is_numeric($page) && is_string($page)) {
+            $method  = 'calc' . ucwords($page) . 'Page';
+            $pageNum = $this->inputs->$method();
+            return $pageNum;
+        } else {
+            $pageNum = $page;
+            return $pageNum;
+        }
     }
 
 }

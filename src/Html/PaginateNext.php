@@ -19,13 +19,9 @@ class PaginateNext extends AbstractPaginate
         $page_list = $this->fillUpToPages();
 
         $pages = [];
-        if (!isset($page_list[$this->inputs->calcFirstPage()])) {
-            $pages[] = $this->constructPage('first');
-        }
+        $pages = $this->constructPageIfNotInPages('first', $pages, $page_list);
         $pages = array_merge($pages, $page_list);
-        if (!isset($page_list[$this->inputs->calcNextPage()])) {
-            $pages[] = $this->constructPage('next');
-        }
+        $pages = $this->constructPageIfNotInPages('next', $pages, $page_list);
 
         return $this->addAriaLabel($pages);
     }

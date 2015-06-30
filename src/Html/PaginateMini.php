@@ -19,13 +19,9 @@ class PaginateMini extends AbstractPaginate
         $page_list = $this->fillPages();
 
         $pages = [];
-        if (!isset($page_list[$this->inputs->calcFirstPage()])) {
-            $pages[] = $this->constructPage('first');
-        }
+        $pages = $this->constructPageIfNotInPages('first', $pages, $page_list);
         $pages = array_merge($pages, $page_list);
-        if (!isset($page_list[$this->inputs->calcLastPage()])) {
-            $pages[] = $this->constructPage('last');
-        }
+        $pages = $this->constructPageIfNotInPages('last', $pages, $page_list);
 
         return $this->addAriaLabel($pages);
     }
