@@ -24,11 +24,11 @@ class ToBootstrapNext extends AbstractBootstrap implements ToStringInterface
 
         $pages = [];
         if (!isset($page_list[$this->inputs->calcFirstPage()])) {
-            $pages[] = ['rel' => 'first', 'page' => $this->inputs->calcFirstPage()]; // top
+            $pages[] = $this->constructPage('first');
         }
         $pages = array_merge($pages, $page_list);
         if (!isset($page_list[$this->inputs->calcNextPage()])) {
-            $pages[] = ['rel' => 'next', 'page' => $this->inputs->calcNextPage()]; // top
+            $pages[] = $this->constructPage('next');
         }
 
         return $this->addAriaLabel($pages);
@@ -41,7 +41,7 @@ class ToBootstrapNext extends AbstractBootstrap implements ToStringInterface
 
         $pages = [];
         for ($page = $start; $page <= $last; $page++) {
-            $pages[$page] = ['rel' => $page, 'page' => $page, 'type' => 'active'];
+            $pages[$page] = $this->constructPage($page);
         }
         return $pages;
     }

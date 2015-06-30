@@ -102,30 +102,58 @@ abstract class AbstractBootstrap
 
         $pages = [];
         for ($page = $start; $page <= $last; $page++) {
-            $pages[$page] = ['rel' => $page, 'page' => $page, 'type' => 'active'];
+            $pages[$page] = $this->constructPage($page);
         }
         return $pages;
     }
 
     /**
+     * @param string|int $page
+     * @return array
+     */
+    protected function constructPage($page)
+    {
+        if (!is_numeric($page) && is_string($page)) {
+            $method = 'calc'.ucwords($page).'Page';
+            $pageNum = $this->inputs->$method();
+        } else {
+            $pageNum = $page;
+        }
+        $href = ($pageNum == $this->inputs->getPage()) ?
+            '#' : $this->inputs->getPath($pageNum);
+        return ['rel' => $page, 'href' => $href];
+    }
+
+    /**
+     * @param string|int $page
+     * @return string
+     */
+    protected function href($page)
+    {
+        if (!is_numeric($page) && is_string($page)) {
+            $method = 'calc'.ucwords($page).'Page';
+            $page = $this->inputs->$method();
+        }
+        return $this->inputs->getPath($page);
+    }
+
+    /**
      * @param string $rel
-     * @param int    $page
-     * @param string $type
+     * @param string $href
      * @param string $aria
      * @return string
      */
-    protected function bootLi($rel, $page, $type, $aria)
+    protected function bootLi($rel, $href, $aria)
     {
-        $type  = $type ?: $this->default_type;
         $label = isset($this->options[$rel]) ? $this->options[$rel] : $rel;
         $srLbl = $aria ? " aria-label=\"{$aria}\"" : '';
-        if ($page != $this->currPage) {
-            $html = "<li><a href='{$this->inputs->getPath($page)}'";
+        if ($href != '#') {
+            $html = "<li><a href='{$href}'";
             $html .= $srLbl. " >{$label}</a></li>\n";
-        } elseif ($type == 'disable') {
-            $html = "<li class='disabled'><a href='#' >{$label}</a></li>\n";
-        } else {
+        } elseif (is_numeric($rel)) {
             $html = "<li class='active'><a href='#' >{$label}</a></li>\n";
+        } else {
+            $html = "<li class='disabled'><a href='#' >{$label}</a></li>\n";
         }
         return $html;
     }
@@ -150,10 +178,9 @@ abstract class AbstractBootstrap
     protected function listItem(array $info)
     {
         $label = isset($info['rel']) ? $info['rel'] : '';
-        $page  = isset($info['page']) ? $info['page'] : '';
-        $type  = isset($info['type']) ? $info['type'] : '';
+        $href  = isset($info['href']) ? $info['href'] : '';
         $aria  = isset($info['aria']) ? $info['aria'] : '';
-        return $this->bootLi($label, $page, $type, $aria);
+        return $this->bootLi($label, $href, $aria);
     }
 
 }

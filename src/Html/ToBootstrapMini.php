@@ -24,11 +24,11 @@ class ToBootstrapMini extends AbstractBootstrap implements ToStringInterface
 
         $pages = [];
         if (!isset($page_list[$this->inputs->calcFirstPage()])) {
-            $pages[] = ['rel' => 'first', 'page' => $this->inputs->calcFirstPage()]; // top
+            $pages[] = $this->constructPage('first');
         }
         $pages = array_merge($pages, $page_list);
         if (!isset($page_list[$this->inputs->calcLastPage()])) {
-            $pages[] = ['rel' => 'last', 'page' => $this->inputs->calcLastPage()]; // top
+            $pages[] = $this->constructPage('last');
         }
 
         return $this->addAriaLabel($pages);

@@ -13,15 +13,15 @@ class ToBootstrap extends AbstractBootstrap implements ToStringInterface
         $numLinks = $this->options['num_links'];
 
         $pages   = [];
-        $pages[] = ['rel' => 'first', 'page' => $this->inputs->calcFirstPage()]; // top
-        $pages[] = ['rel' => 'prev',  'page' => $this->inputs->calcPrevPage()]; // prev
+        $pages[] = $this->constructPage('first');
+        $pages[] = $this->constructPage('prev');
 
         // list of pages, from $start till $last.
         $pages   = array_merge($pages, $this->fillPages($numLinks));
 
-        $pages[] = ['rel' => 'next', 'page' => $this->inputs->calcNextPage()]; // next
-        $pages[] = ['rel' => 'last', 'page' => $this->inputs->calcLastPage()]; // last
-        
+        $pages[] = $this->constructPage('next');
+        $pages[] = $this->constructPage('last');
+
         return $this->addAriaLabel($pages);
     }
 }
