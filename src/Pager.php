@@ -1,10 +1,18 @@
 <?php
 namespace WScore\Pagination;
 
+use PhpParser\Node\Expr\Closure;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Pager
 {
+    /**
+     * a validation closure for $query input.
+     *
+     * @var \Closure
+     */
+    public $validator;
+
     /**
      * name for session storage key. 
      * 
@@ -56,6 +64,9 @@ class Pager
                 $this->pagerKey => 1,
                 $this->limitKey => 20
             ];
+        if (isset($default['validator']) && $default['validator'] instanceof Closure ) {
+            $this->validator = $default['validator'];
+        }
     }
 
     /**
@@ -115,13 +126,14 @@ class Pager
      */
     private function secureInput(array $query)
     {
-        array_walk_recursive($query, function(&$v) {
+        $secure = $this->validator ?: function(&$v) {
             if (strpos($v, "\0") !== false) {
                 $v = '';
             } elseif( !mb_check_encoding($v, 'UTF-8')) {
                 $v = '';
             }
-        });
+        };
+        array_walk_recursive($query, $secure);
         return $query;
     }
 
