@@ -15,7 +15,7 @@ class ToBootstrapMiniTest extends \PHPUnit_Framework_TestCase
     {
         $req = RequestHelper::createFromPath('/test');
 
-        $pager = (new Pager())->withRequest($req);
+        $pager = (new Pager(['_limit'=>5]))->withRequest($req);
         $pager = $pager->withRequest($req->withQueryParams(['_page' => 2]));
         $inputs= $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(200);
@@ -25,7 +25,7 @@ class ToBootstrapMiniTest extends \PHPUnit_Framework_TestCase
         $this->assertContains("<li class='active'><a href='#' >2</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=3' >3</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=7' >7</a></li>", $html);
-        $this->assertContains("<li><a href='/test?_page=10' aria-label=\"last page\" >&raquo;</a></li>", $html);
+        $this->assertContains("<li><a href='/test?_page=40' aria-label=\"last page\" >&raquo;</a></li>", $html);
     }
 
     /**

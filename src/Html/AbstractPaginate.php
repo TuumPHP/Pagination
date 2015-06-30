@@ -81,8 +81,18 @@ abstract class AbstractPaginate implements PaginateInterface
     {
         $numLinks = $this->num_links;
         $currPage = $this->inputs->getPage();
-        $start    = max($currPage - $numLinks, $this->inputs->calcFirstPage());
-        $last     = min($currPage + $numLinks, $this->inputs->calcLastPage());
+        $lastPage = $this->inputs->calcLastPage();
+
+        $extra_1  = max(0, $numLinks - $currPage);
+        $extra_2  = max(0, $numLinks - ($lastPage - $currPage));
+        if ($extra_1 > 0 || $currPage === $numLinks) {
+            $extra_2 += $extra_1 + 1;
+        }
+        if ($extra_2 > 0) {
+            $extra_1 += $extra_2;
+        }
+        $start    = max($currPage - $numLinks - $extra_1, $this->inputs->calcFirstPage());
+        $last     = min($currPage + $numLinks + $extra_2, $this->inputs->calcLastPage());
 
         $pages = [];
         for ($page = $start; $page <= $last; $page++) {
