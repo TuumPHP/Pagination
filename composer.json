@@ -1,5 +1,5 @@
 {
-    "name": "wscore/pagination",
+    "name": "tuum/pagination",
     "description": "a generic pagination package for PSR-7.",
     "license": "MIT",
     "authors": [
