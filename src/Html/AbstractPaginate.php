@@ -1,7 +1,7 @@
 <?php
-namespace WScore\Pagination\Html;
+namespace Tuum\Pagination\Html;
 
-use WScore\Pagination\Inputs;
+use Tuum\Pagination\Inputs;
 
 abstract class AbstractPaginate implements PaginateInterface
 {

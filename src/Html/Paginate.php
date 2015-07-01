@@ -1,5 +1,5 @@
 <?php
-namespace WScore\Pagination\Html;
+namespace Tuum\Pagination\Html;
 
 class Paginate extends AbstractPaginate
 {

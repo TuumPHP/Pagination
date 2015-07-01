@@ -1,9 +1,10 @@
 <?php
 namespace tests\Pagination;
 
-use Tuum\Respond\RequestHelper;
-use WScore\Pagination\Inputs;
-use WScore\Pagination\Pager;
+use Tuum\Pagination\Inputs;
+use Tuum\Pagination\Pager;
+use Zend\Diactoros\ServerRequest;
+use Zend\Diactoros\Uri;
 
 class PaginationTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,7 +20,7 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
 
     function test0()
     {
-        $this->assertEquals('WScore\Pagination\Pager', get_class($this->pager));
+        $this->assertEquals('Tuum\Pagination\Pager', get_class($this->pager));
     }
 
     /**
@@ -29,7 +30,7 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
      */
     function createRequest($path, $method = 'get')
     {
-        $req = RequestHelper::createFromPath($path, $method);
+        $req = new ServerRequest([], [], new Uri($path), $method, 'php://input', []);
         return $req;
     }
 

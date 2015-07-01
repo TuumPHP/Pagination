@@ -1,7 +1,7 @@
 <?php
-namespace WScore\Pagination;
+namespace Tuum\Pagination;
 
-use WScore\Pagination\Html\PaginateInterface;
+use Tuum\Pagination\Html\PaginateInterface;
 
 class Inputs
 {

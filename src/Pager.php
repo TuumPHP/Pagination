@@ -1,5 +1,5 @@
 <?php
-namespace WScore\Pagination;
+namespace Tuum\Pagination;
 
 use PhpParser\Node\Expr\Closure;
 use Psr\Http\Message\ServerRequestInterface;

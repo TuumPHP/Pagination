@@ -1,13 +1,25 @@
 <?php
 namespace tests\Pagination;
 
-use Tuum\Respond\RequestHelper;
-use WScore\Pagination\Html\PaginateNext;
-use WScore\Pagination\Inputs;
-use WScore\Pagination\Pager;
+use Tuum\Pagination\Html\PaginateNext;
+use Tuum\Pagination\Inputs;
+use Tuum\Pagination\Pager;
+use Zend\Diactoros\ServerRequest;
+use Zend\Diactoros\Uri;
 
 class ToBootstrapNextTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @param string $path
+     * @param string $method
+     * @return \Psr\Http\Message\ServerRequestInterface
+     */
+    function createRequest($path, $method = 'get')
+    {
+        $req = new ServerRequest([], [], new Uri($path), $method, 'php://input', []);
+        return $req;
+    }
+
     /**
      * @test
      */
@@ -30,7 +42,7 @@ class ToBootstrapNextTest extends \PHPUnit_Framework_TestCase
      */
     function get_bootstrap_all()
     {
-        $req = RequestHelper::createFromPath('/test');
+        $req = $this->createRequest('/test');
 
         $pager = (new Pager())->withRequest($req);
         $pager = $pager->withRequest($req->withQueryParams(['_page' => 4]));
