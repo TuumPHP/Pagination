@@ -11,6 +11,9 @@
     "require": {
       "psr/http-message": "^1.0"
     },
+    "require-dev": {
+        "zendframework/zend-diactoros":"^1.0"
+    },
     "autoload": {
         "psr-4": {
             "Tuum\\Pagination\\": "src/"
