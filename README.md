@@ -1,13 +1,16 @@
 Generic Pagination
 ================
 
-a generic pagination class for PSR-7 and others. 
+a generic pagination class for PSR-7. 
+
+Designed to keep the current page number and form input in session to simplify query code. 
+Also a flexibility of pagination output and html/css format is in mind.   
+
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/TuumPHP/Pagination/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/TuumPHP/Pagination/?branch=master)
 
 ### License
 
 MIT license
-
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/WScore/Pagination/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/WScore/Pagination/?branch=master)
 
 Getting Started
 ----
