@@ -20,7 +20,7 @@ Getting Started
 please use composer to install WScore/Pagination package. 
 
 ```sh
-$ composer require "wscore/pagination"
+$ composer require "tuum/pagination"
 ```
 
 
@@ -92,6 +92,7 @@ Construct a query form **without `_page` key**.
 ```
 
 Pager will store the query data (i.e. $_GET) to session for the subsequent requests. 
+So, please start the session in prior. 
 
 ### query with page number 
 
