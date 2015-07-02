@@ -42,14 +42,38 @@ abstract class AbstractPaginate implements PaginateInterface
      */
     public function __construct($toHtml = null)
     {
-        $this->toHtml = $toHtml ?: new ToHtmlBootstrap();
+        $this->toHtml = $toHtml;
     }
 
     /**
-     * @return array
+     * @param null|ToHtmlInterface $toHtml
+     * @return AbstractPaginate
      */
-    abstract public function toArray();
+    public static function forge($toHtml = null)
+    {
+        $self = new static($toHtml);
+        return $self;
+    }
 
+    /**
+     * @param int $num
+     * @return $this
+     */
+    public function numLinks($num)
+    {
+        $this->num_links = $num;
+        return $this;
+    }
+
+    /**
+     * @param array $aria
+     * @return $this
+     */
+    public function aria(array $aria)
+    {
+        $this->aria_label = $aria + $this->aria_label;
+        return $this;
+    }
     /**
      * @API
      * @param string $path
@@ -66,12 +90,22 @@ abstract class AbstractPaginate implements PaginateInterface
     }
 
     /**
+     * @API
+     * @param ToHtmlInterface $toHtml
+     * @return string
+     */
+    public function toHtml($toHtml = null)
+    {
+        $toHtml = $toHtml ?: ($this->toHtml ?: new ToHtmlBootstrap());
+        return $toHtml->toString($this);
+    }
+
+    /**
      * @return string
      */
     public function __toString()
     {
-        $pages = $this->toArray();
-        return $this->toHtml->toString($pages);
+        return $this->toHtml();
     }
 
     /**

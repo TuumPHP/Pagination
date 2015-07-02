@@ -1,6 +1,7 @@
 <?php
 namespace Tuum\Pagination;
 
+use Tuum\Pagination\Html\Paginate;
 use Tuum\Pagination\Html\PaginateInterface;
 
 class Inputs
@@ -38,13 +39,14 @@ class Inputs
     /**
      * @var PaginateInterface
      */
-    public $toHtml;
+    public $paginate;
 
     /**
-     * 
+     * @param null|PaginateInterface $paginate
      */
-    public function __construct()
+    public function __construct($paginate = null)
     {
+        $this->paginate = $paginate;
     }
 
     /**
@@ -209,13 +211,13 @@ class Inputs
      * set up ToStringInterface objects to output html pagination.
      *
      * @API
-     * @param PaginateInterface $html
+     * @param null|PaginateInterface $html
      * @return PaginateInterface
      */
-    public function paginate($html)
+    public function paginate($html = null)
     {
-        $this->toHtml = $html->withRequestAndInputs($this->path, $this);
-        return $this->toHtml;
+        $this->paginate = $html ?: ($this->paginate ?: new Paginate());
+        return $this->paginate->withRequestAndInputs($this->path, $this);
     }
 
     /**
@@ -223,9 +225,7 @@ class Inputs
      */
     public function __toString()
     {
-        if (!isset($this->toHtml)) {
-            return '';
-        }
-        return $this->toHtml->__toString();
+        $html = $this->paginate();
+        return $html->__toString();
     }
 }

@@ -9,8 +9,8 @@ namespace Tuum\Pagination\Html;
 interface ToHtmlInterface
 {
     /**
-     * @param array $pages
+     * @param PaginateInterface $paginate
      * @return string
      */
-    public function toString(array $pages);
+    public function toString(PaginateInterface $paginate);
 }

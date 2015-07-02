@@ -11,7 +11,6 @@ class ToHtmlBootstrap implements ToHtmlInterface
         'prev'      => 'prev',
         'next'      => 'next',
         'last'      => '&raquo;',
-        'num_links' => 5,
     ];
 
     /**
@@ -22,19 +21,29 @@ class ToHtmlBootstrap implements ToHtmlInterface
     public $default_type = 'disable';
 
     /**
-     * @param array $options
+     * @param array $labels
      */
-    public function __construct($options = [])
+    public function __construct(array $labels = [])
     {
-        $this->labels = $options + $this->labels;
+        $this->labels = $labels + $this->labels;
     }
 
     /**
-     * @param array $pages
+     * @param array $labels
+     * @return ToHtmlBootstrap
+     */
+    public static function forge(array $labels = [])
+    {
+        return new self($labels);
+    }
+
+    /**
+     * @param PaginateInterface $paginate
      * @return string
      */
-    public function toString(array $pages)
+    public function toString(PaginateInterface $paginate)
     {
+        $pages = $paginate->toArray();
         $html = '';
         foreach ($pages as $info) {
             $html .= $this->listItem($info);

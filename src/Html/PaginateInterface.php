@@ -25,6 +25,13 @@ interface PaginateInterface
 
     /**
      * @API
+     * @param ToHtmlInterface $toHtml
+     * @return string
+     */
+    public function toHtml($toHtml = null);
+
+    /**
+     * @API
      * @return string
      */
     public function __toString();

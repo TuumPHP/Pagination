@@ -56,17 +56,34 @@ class Pager
     private $path;
 
     /**
-     * @param array $default
+     * @var Inputs
      */
-    public function __construct($default = [])
+    private $inputObject;
+
+    /**
+     * @param null|Inputs  $inputObject
+     * @param array        $default
+     */
+    public function __construct($inputObject = null, array $default = [])
     {
         $this->default = $default + [
                 $this->pagerKey => 1,
                 $this->limitKey => 20
             ];
-        if (isset($default['validator']) && $default['validator'] instanceof Closure) {
-            $this->validator = $default['validator'];
-        }
+        $this->inputObject = $inputObject;
+    }
+
+    /**
+     * set a closure for validation.
+     *
+     * in PHP, sort of...
+     * array_walk_recursive($_GET, $validator)
+     *
+     * @param Closure $validator
+     */
+    public function useValidator($validator)
+    {
+        $this->validator = $validator;
     }
 
     /**
@@ -197,7 +214,7 @@ class Pager
      */
     private function forgeInputs()
     {
-        $inputs           = new Inputs();
+        $inputs           = $this->inputObject ? clone($this->inputObject) : new Inputs();
         $inputs->pagerKey = $this->pagerKey;
         $inputs->limitKey = $this->limitKey;
         $inputs->path     = $this->path;

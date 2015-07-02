@@ -29,8 +29,8 @@ class ToBootstrapNextTest extends \PHPUnit_Framework_TestCase
         $inputs= $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(200);
         });
-        $inputs->paginate(new PaginateNext());
-        $html  = $inputs->__toString();
+        $paginate = $inputs->paginate(new PaginateNext());
+        $html  = $paginate->__toString();
         $this->assertContains("<li><a href='/test?_page=1' >1</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=3' >3</a></li>", $html);
         $this->assertContains("<li class='active'><a href='#' >4</a></li>", $html);
@@ -44,15 +44,15 @@ class ToBootstrapNextTest extends \PHPUnit_Framework_TestCase
     {
         $req = $this->createRequest('/test');
 
-        $pager = (new Pager())->withRequest($req);
+        $toHtml = new PaginateNext();
+        $toHtml->num_links = 2;
+        $inputs = new Inputs($toHtml);
+        $pager = (new Pager($inputs))->withRequest($req);
         $pager = $pager->withRequest($req->withQueryParams(['_page' => 4]));
         $inputs= $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(200);
         });
-        $toHtml = new PaginateNext();
-        $toHtml->num_links = 2;
-        $inputs->paginate($toHtml);
-        $html  = $inputs->__toString();
+        $html  = (string) $inputs;
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"first page\" >&laquo;</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=3' >3</a></li>", $html);
         $this->assertContains("<li class='active'><a href='#' >4</a></li>", $html);

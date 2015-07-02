@@ -25,15 +25,13 @@ class ToBootstrapMiniTest extends \PHPUnit_Framework_TestCase
      */
     function get_bootstrap_style_html()
     {
-        $req = $this->createRequest('/test');
-
-        $pager = (new Pager(['_limit'=>5]))->withRequest($req);
-        $pager = $pager->withRequest($req->withQueryParams(['_page' => 2]));
+        $pager = new Pager();
+        $pager = $pager->withQuery(['_page' => 2,'_limit'=>5], '/test');
         $inputs= $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(200);
         });
-        $inputs->paginate(new PaginateMini());
-        $html  = $inputs->__toString();
+        $paginate = $inputs->paginate(new PaginateMini());
+        $html  = $paginate->__toString();
         $this->assertContains("<li class='active'><a href='#' >2</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=3' >3</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=7' >7</a></li>", $html);
@@ -54,8 +52,7 @@ class ToBootstrapMiniTest extends \PHPUnit_Framework_TestCase
         });
         $toHtml = new PaginateMini();
         $toHtml->num_links = 2;
-        $inputs->paginate($toHtml);
-        $html  = $inputs->__toString();
+        $html  = (string) $inputs->paginate($toHtml);
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"first page\" >&laquo;</a></li>", $html);
         $this->assertContains("<li class='active'><a href='#' >4</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=2' >2</a></li>", $html);
