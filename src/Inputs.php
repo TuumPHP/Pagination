@@ -17,14 +17,14 @@ class Inputs
     public $limitKey = '_limit';
 
     /**
-     * @var string
+     * @var int|null
      */
-    public $totalKey = '_total';
+    private $total = null;
 
     /**
-     * @var string
+     * @var array
      */
-    public $listKey = '_list';
+    private $list = [];
 
     /**
      * @var string
@@ -39,7 +39,7 @@ class Inputs
     /**
      * @var PaginateInterface
      */
-    public $paginate;
+    private $paginate;
 
     /**
      * @param null|PaginateInterface $paginate
@@ -102,7 +102,7 @@ class Inputs
      */
     public function getTotal()
     {
-        return array_key_exists($this->totalKey, $this->inputs) ? (int)$this->inputs[$this->totalKey] : null;
+        return $this->total;
     }
 
     /**
@@ -112,7 +112,7 @@ class Inputs
      */
     public function setTotal($total)
     {
-        $this->inputs[$this->totalKey] = $total;
+        $this->total = $total;
     }
 
     /**
@@ -122,17 +122,17 @@ class Inputs
      */
     public function setList($list)
     {
-        $this->inputs[$this->listKey] = $list;
+        $this->list = $list;
     }
 
     /**
      * get the data for list.
      *
-     * @return null|mixed
+     * @return null|array|mixed
      */
     public function getList()
     {
-        return array_key_exists($this->listKey, $this->inputs) ? $this->inputs[$this->listKey] : null;
+        return $this->list;
     }
 
     /**
@@ -143,8 +143,8 @@ class Inputs
      */
     public function getCount()
     {
-        if (array_key_exists($this->listKey, $this->inputs) && is_array($this->inputs[$this->listKey])) {
-            return count($this->inputs[$this->listKey]);
+        if (isset($this->list) && is_array($this->list)) {
+            return count($this->list);
         }
         return 0;
     }
