@@ -164,7 +164,9 @@ class Pager
      */
     private function saveToSession()
     {
-        $_SESSION[$this->name] = $this->inputs;
+        if (isset($_SESSION)) {
+            $_SESSION[$this->name] = $this->inputs;
+        }
     }
 
     /**
@@ -195,10 +197,11 @@ class Pager
      */
     private function forgeInputs()
     {
-        $inputs           = new Inputs($this->inputs);
+        $inputs           = new Inputs();
         $inputs->pagerKey = $this->pagerKey;
         $inputs->limitKey = $this->limitKey;
         $inputs->path     = $this->path;
+        $inputs->inputs   = $this->inputs;
 
         return $inputs;
     }

@@ -33,7 +33,7 @@ class Inputs
     /**
      * @var array
      */
-    private $inputs = [];
+    public $inputs = [];
 
     /**
      * @var PaginateInterface
@@ -41,11 +41,10 @@ class Inputs
     public $toHtml;
 
     /**
-     * @param array $inputs
+     * 
      */
-    public function __construct($inputs)
+    public function __construct()
     {
-        $this->inputs = $inputs;
     }
 
     /**

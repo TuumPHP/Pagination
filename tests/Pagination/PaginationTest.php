@@ -16,6 +16,7 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
     function setup()
     {
         $this->pager   = new Pager();
+        $_SESSION = [];
     }
 
     function test0()
