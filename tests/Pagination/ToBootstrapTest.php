@@ -38,8 +38,8 @@ class ToBootstrapTest extends \PHPUnit_Framework_TestCase
         $inputs= $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(200);
         });
-        $inputs->paginate(Paginate::forge()->numLinks(2));
-        $html  = $inputs->__toString();
+        $pages = $inputs->paginate(Paginate::forge()->numLinks(2));
+        $html  = $pages->__toString();
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"first page\" >&laquo;</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=3' aria-label=\"previous page\" >prev</a></li>", $html);
         $this->assertNotContains("<li><a href='/test?_page=1' >1</a></li>", $html);

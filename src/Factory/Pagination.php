@@ -5,8 +5,6 @@ use Tuum\Pagination\Html\Paginate;
 use Tuum\Pagination\Html\PaginateInterface;
 use Tuum\Pagination\Html\ToHtmlBootstrap;
 use Tuum\Pagination\Html\ToHtmlInterface;
-use Tuum\Pagination\Inputs;
-use Tuum\Pagination\Pager;
 
 class Pagination
 {
@@ -31,7 +29,7 @@ class Pagination
     /**
      * @return static
      */
-    public static function forge()
+    public static function start()
     {
         return new static();
     }
@@ -63,16 +61,6 @@ class Pagination
     public function numLinks($num)
     {
         $this->num_links = $num;
-        return $this;
-    }
-
-    /**
-     * @param int $limit
-     * @return $this
-     */
-    public function limit($limit)
-    {
-        $this->limit = $limit;
         return $this;
     }
 
@@ -114,23 +102,9 @@ class Pagination
      */
     public function getPaginate()
     {
-        if ($this->paginate) {
-            return $this->paginate;
-        }
-        $paginate = new Paginate($this->getToHtmlBootstrap());
-        $paginate->aria_label += $this->aria;
-        $paginate->num_links = $this->num_links;
+        $paginate = $this->paginate ?: new Paginate($this->getToHtmlBootstrap());
+        $paginate->aria($this->aria);
+        $paginate->numLinks($this->num_links);
         return $paginate;
-    }
-
-    /**
-     * @param array $option
-     * @return Pager
-     */
-    public function getPager($option = [])
-    {
-        $inputs = new Inputs($this->getPaginate());
-        $pager  = new Pager($option, $inputs);
-        return $pager;
     }
 }

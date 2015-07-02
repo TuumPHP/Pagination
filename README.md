@@ -67,11 +67,9 @@ There is a default bootstrap pagination html.
 ```php
 use WScore\Pagination\Html\Paginate;
 
-$inputs->paginate(new Paginate());
-echo $inputs->__toString();
+$pages = $inputs->paginate(new Paginate());
+echo $pages->__toString();
 ```
-
-The `$inputs` object holds the information to construct a query. You can return anything from the closure; it will be passed back to you from the `Pager::call` method. 
 
 
 Constructing an HTML Form
@@ -148,20 +146,10 @@ As a default, the input values are validated to contain no nulls as well as a va
 To change the validation, you can pass it at the construction of `Pager` as;
 
 ```php
-$pager = new Pager([
-    'validator' => function(&$v) {
+$pager = (new Pager())
+    ->useValidator(function(&$v) {
         $v = 'validate=' . $v;
-    },
-]);
-```
-
-or you can simply set it like,
-
-```php
-$pager->validator = function(&$v) {
-        $v = 'validate=' . $v;
-    },
-]);
+    });
 ```
 
 FYI: this is the default closure. 
@@ -179,13 +167,28 @@ function (&$v) {
 Output Pagination Html
 ----
 
-### `PaginateInterface` interface
+### using `Pagination` builder
 
-To create html pagination component, create an object implementing `PaginateInterface` and supply it to the Inputs object;
+Pagination builder helps to construct a pagination object. examples:
 
 ```php
-$inputs->paginate(new Pagination);
+use Tuum\Pagination\Factory\Pagination;
+
+$pages = Pagination::start()
+    ->numLinks(3)
+    ->label([
+        'first' => '1st',
+    ])
+    ->aria([
+        'first' => '1st page',
+    ])
+    ->pagination(new PaginateNext())
+    ->getPaginate();
+$pages = $inputs->paginate($pages);
+echo $pages->__toString();
 ```
+
+#### `PaginateInterface` objects
 
 There are 3 implementations of PaginateInterface:
 
@@ -195,9 +198,31 @@ There are 3 implementations of PaginateInterface:
 
 > TODO: supply sample image of pagination for each class.
 
+
+### inside the Pagination
+
+There are two interfaces for outputing an HTML: 
+
+*   `PaginateInterface` for creating an array of page information, and 
+*   `ToHtmlInterface` for converting the array to HTML code. 
+
+To create html pagination component, create an object implementing `PaginateInterface` and supply it to the Inputs object;
+
+```php
+class MyPagination implements PaginateInterface {...}
+class MyHtml implements ToHtmlInterface {...}
+
+$inputs= $pager->call(function...);
+
+// convert to HTML
+$pages = $inputs->paginate(new MyPagination);
+$htmls = $pages->toHtml($new MyHtml);
+```
+
+
 #### `PaginateInterface::toArray` method
 
-In PaginateInterface, it uses toArray method to construct an array of pages, which must contain following:
+The main API of the `PaginateInterface` is the `toArray` method, which construct an array of pages with following information:
 
 *   `rel`: shows relation to the current page. Either of 'first', 'next', 'prev', 'last', or numeric page numbers. 
 *   `href`: url to the page. 
@@ -207,34 +232,22 @@ as such, the array may look like;
 
 ```php
 $pages = array(
-    ['rel' => 'first', 'href' => '/t?_page=1', 'aria' => 'first page'],
-    ...
+    [
+        'rel' => 'first', 
+        'href' => '/t?_page=1', 
+        'aria' => 'first page'
+    ], ...
 );
 ```
 
-#### `PaginateInterface::__toString` method
+#### `PaginateInterface::toHtml` method
 
-The `__toString` method converts the array from `toArray` method to HTML using an object implementing `ToHtmlInterface`. The `ToHtmlBootstrap` class is used as a default which converts array into HTML for Bootstrap CSS. 
-
-To use other HTML/CSS style, provide an object implementing the `ToHtmlInterface`, for example `ToMyHtml`, as;
-
+The `PaginateInterface::toHtml` method takes an object implementing `ToHtmlInterface`, then converts the pages array into an HTML code. There is only one implementation of the `ToHtmlInterface`, `ToHtmlBootstrap`.
 
 ```php
-$inputs->paginate(new PaginateMini(new ToMyHtml()));
-echo $inputs->__toString(); // outputs pagination html
+$pages = $inputs->paginate(new Paginate());
+$htmls = $pages->toHtml(new ToHtmlBootstrap());
+echo $htmls;
 ```
 
-### modifying `Paginate` object
-
-Many of the configuration of Paginate objects can be done by accessing public properties. 
-
-To change the default number of pages in Pagination, do as follows; 
-
-```php
-$paginate = new Paginate();
-$paginate->num_links = 2;
-$paginate->aria_label = [
-    'first' => '最初', // in Japanese
-];
-$inputs->paginate($paginate);
-```
+The `PaginateInterface::__toString` method simply calls the `toHtml` method without arguments. 

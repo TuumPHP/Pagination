@@ -18,6 +18,16 @@ interface PaginateInterface
     public function withRequestAndInputs($path, $inputs);
 
     /**
+     * constructs an array of page information.
+     *   $pages = array(
+     *     [...page info...], [...]
+     *   );
+     *
+     * where page info is consisted of the following.
+     *   - rel : relation to the current page, such as 'first'.
+     *   - href: uri for the page.
+     *   - aria: human readable description.
+     *
      * @API
      * @return array
      */
