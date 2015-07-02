@@ -1,7 +1,7 @@
 <?php
 namespace Tuum\Pagination;
 
-use PhpParser\Node\Expr\Closure;
+use \Closure;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Pager

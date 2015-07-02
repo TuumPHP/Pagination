@@ -159,4 +159,54 @@ class PaginationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('20', $inputs->getOffset());
         $this->assertEquals(123, $inputs->getTotal());
     }
+
+    /**
+     * thanks:
+     * http://stackoverflow.com/questions/1301402/example-invalid-utf8-string
+     *
+     * @test
+     */
+    function check_for_invalid_inputs()
+    {
+        $bad = array(
+            'null' => "ab\0cd",
+            'Valid ASCII' => "a",
+            'Valid 2 Octet Sequence' => "\xc3\xb1",
+            'Invalid 2 Octet Sequence' => "\xc3\x28",
+            'Invalid Sequence Identifier' => "\xa0\xa1",
+            'Valid 3 Octet Sequence' => "\xe2\x82\xa1",
+            'Invalid 3 Octet Sequence (in 2nd Octet)' => "\xe2\x28\xa1",
+            'Invalid 3 Octet Sequence (in 3rd Octet)' => "\xe2\x82\x28",
+            'Valid 4 Octet Sequence' => "\xf0\x90\x8c\xbc",
+            'Invalid 4 Octet Sequence (in 2nd Octet)' => "\xf0\x28\x8c\xbc",
+            'Invalid 4 Octet Sequence (in 3rd Octet)' => "\xf0\x90\x28\xbc",
+            'Invalid 4 Octet Sequence (in 4th Octet)' => "\xf0\x28\x8c\x28",
+            'Valid 5 Octet Sequence (but not Unicode!)' => "\xf8\xa1\xa1\xa1\xa1",
+            'Valid 6 Octet Sequence (but not Unicode!)' => "\xfc\xa1\xa1\xa1\xa1\xa1",
+        );
+
+        $this->pager->withQuery($bad, '/test')->call(function(Inputs $inputs) {
+            $this->assertEquals('', $inputs->get('null'));
+            if (!$inputs->get('Valid ASCII')) {
+                throw new \RuntimeException('must receive valid ascii input');
+            }
+            $this->assertEquals('', $inputs->get('Invalid Sequence Identifier'));
+            $this->assertEquals('', $inputs->get('Invalid 4 Octet Sequence (in 3rd Octet)'));
+        });
+    }
+
+    /**
+     * @test
+     */
+    function using_own_validator()
+    {
+        $pager = $this->pager;
+        $pager->useValidator(function(&$v) {
+            $v = 'tested:'.$v;
+        });
+        $pager->withQuery(['test' => 'done'], '/test')->call(function(Inputs $inputs) {
+            $this->assertEquals('tested:done', $inputs->get('test'));
+        });
+
+    }
 }

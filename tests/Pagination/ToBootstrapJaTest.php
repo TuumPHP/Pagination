@@ -9,6 +9,11 @@ use Zend\Diactoros\Uri;
 
 class ToBootstrapJaTest extends \PHPUnit_Framework_TestCase
 {
+    function setup()
+    {
+        $_SESSION = [];
+    }
+
     /**
      * @param string $path
      * @param string $method
