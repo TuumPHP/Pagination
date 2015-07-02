@@ -2,7 +2,9 @@
 namespace Tuum\Pagination\Factory;
 
 use Tuum\Pagination\Html\Paginate;
+use Tuum\Pagination\Html\PaginateInterface;
 use Tuum\Pagination\Html\ToHtmlBootstrap;
+use Tuum\Pagination\Html\ToHtmlInterface;
 use Tuum\Pagination\Inputs;
 use Tuum\Pagination\Pager;
 
@@ -16,9 +18,15 @@ class Pagination
 
     protected $limit = 15;
 
-    protected $paginate = Paginate::class;
+    /**
+     * @var PaginateInterface
+     */
+    protected $paginate = null;
 
-    protected $toHtml = ToHtmlBootstrap::class;
+    /**
+     * @var ToHtmlInterface
+     */
+    protected $toHtml = null;
 
     /**
      * @return static
@@ -69,7 +77,7 @@ class Pagination
     }
 
     /**
-     * @param string $paginate_class
+     * @param PaginateInterface $paginate_class
      * @return $this
      */
     public function paginate($paginate_class)
@@ -79,7 +87,7 @@ class Pagination
     }
 
     /**
-     * @param string $toHtml_class
+     * @param ToHtmlInterface $toHtml_class
      * @return $this
      */
     public function toHtml($toHtml_class)
@@ -89,21 +97,40 @@ class Pagination
     }
 
     /**
-     * @return Pager
+     * @return ToHtmlBootstrap
      */
-    public function getPager()
+    public function getToHtmlBootstrap()
     {
-        $class  = $this->toHtml;
-        $label  = $this->label;
-        $toHtml = new $class($label);
+        if ($this->toHtml) {
+            return $this->toHtml;
+        }
+        $this->toHtml         = new ToHtmlBootstrap();
+        $this->toHtml->labels = $this->label + $this->toHtml->labels;
+        return $this->toHtml;
+    }
 
-        $class    = $this->paginate;
-        $paginate = new $class($toHtml);
+    /**
+     * @return Paginate
+     */
+    public function getPaginate()
+    {
+        if ($this->paginate) {
+            return $this->paginate;
+        }
+        $paginate = new Paginate($this->getToHtmlBootstrap());
         $paginate->aria_label += $this->aria;
         $paginate->num_links = $this->num_links;
+        return $paginate;
+    }
 
-        $inputs = new Inputs($paginate);
-        $pager  = new Pager($inputs, ['_limit' => $this->limit]);
+    /**
+     * @param array $option
+     * @return Pager
+     */
+    public function getPager($option = [])
+    {
+        $inputs = new Inputs($this->getPaginate());
+        $pager  = new Pager($option, $inputs);
         return $pager;
     }
 }

@@ -52,7 +52,7 @@ class ToBootstrapNextTest extends \PHPUnit_Framework_TestCase
         $toHtml = new PaginateNext();
         $toHtml->num_links = 2;
         $inputs = new Inputs($toHtml);
-        $pager = (new Pager($inputs))->withRequest($req);
+        $pager = (new Pager([], $inputs))->withRequest($req);
         $pager = $pager->withRequest($req->withQueryParams(['_page' => 4]));
         $inputs= $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(200);

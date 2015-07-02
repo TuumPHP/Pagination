@@ -61,10 +61,10 @@ class Pager
     private $inputObject;
 
     /**
-     * @param null|Inputs  $inputObject
      * @param array        $default
+     * @param null|Inputs  $inputObject
      */
-    public function __construct($inputObject = null, array $default = [])
+    public function __construct(array $default = [], $inputObject = null)
     {
         $this->default = $default + [
                 $this->pagerKey => 1,
