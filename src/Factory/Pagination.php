@@ -1,20 +1,28 @@
 <?php
 namespace Tuum\Pagination\Factory;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Tuum\Pagination\Html\Paginate;
 use Tuum\Pagination\Html\PaginateInterface;
 use Tuum\Pagination\Html\ToHtmlBootstrap;
 use Tuum\Pagination\Html\ToHtmlInterface;
+use Tuum\Pagination\Inputs;
+use Tuum\Pagination\Pager;
 
 class Pagination
 {
-    protected $aria = [];
+    public static $aria = [];
 
-    protected $label = [];
+    public static $label = [];
 
-    protected $num_links = 3;
+    public static $num_links = 3;
 
-    protected $limit = 15;
+    public $limit = 15;
+
+    /**
+     * @var Pager
+     */
+    protected $pager;
 
     /**
      * @var PaginateInterface
@@ -27,84 +35,70 @@ class Pagination
     protected $toHtml = null;
 
     /**
+     * @var Inputs
+     */
+    private $inputs;
+
+    /**
+     * @param Pager             $pager
+     * @param PaginateInterface $paginate
+     * @param ToHtmlInterface   $toHtml
+     */
+    public function __construct(Pager $pager, PaginateInterface $paginate, ToHtmlInterface $toHtml)
+    {
+        $this->pager = $pager;
+        $this->paginate = $paginate;
+        $this->toHtml = $toHtml;
+    }
+
+    /**
+     * @param Pager                  $pager
+     * @param PaginateInterface|null $paginate
+     * @param ToHtmlInterface|null   $toHtml
      * @return static
      */
-    public static function start()
+    public static function forge(
+        Pager $pager,
+        PaginateInterface $paginate = null,
+        ToHtmlInterface $toHtml = null)
     {
-        return new static();
+        $paginate = $paginate ?: Paginate::forge(static::$aria);
+        $paginate->numLinks(static::$num_links);
+        $toHtml = $toHtml ?: ToHtmlBootstrap::forge(static::$label);
+        return new static($pager, $paginate, $toHtml);
     }
 
     /**
-     * @param array $aria
+     * @param \Closure $callback
      * @return $this
      */
-    public function aria(array $aria)
+    public function call($callback)
     {
-        $this->aria = $aria;
+        $this->inputs = $this->pager->call($callback);
         return $this;
     }
 
     /**
-     * @param array $label
-     * @return $this
+     * @return array
      */
-    public function label(array $label)
+    public function toArray()
     {
-        $this->label = $label;
-        return $this;
+        return $this->getPaginate()->toArray();
     }
 
     /**
-     * @param int $num
-     * @return $this
+     * @return PaginateInterface
      */
-    public function numLinks($num)
+    private function getPaginate()
     {
-        $this->num_links = $num;
-        return $this;
+        return $this->paginate->withInputs($this->inputs);
     }
 
     /**
-     * @param PaginateInterface $paginate_class
-     * @return $this
+     * @return string
      */
-    public function paginate($paginate_class)
+    public function toHtml()
     {
-        $this->paginate = $paginate_class;
-        return $this;
-    }
-
-    /**
-     * @param ToHtmlInterface $toHtml_class
-     * @return $this
-     */
-    public function toHtml($toHtml_class)
-    {
-        $this->toHtml = $toHtml_class;
-        return $this;
-    }
-
-    /**
-     * @return ToHtmlBootstrap
-     */
-    public function getToHtmlBootstrap()
-    {
-        if ($this->toHtml) {
-            return $this->toHtml;
-        }
-        $this->toHtml         = new ToHtmlBootstrap();
-        $this->toHtml->labels = $this->label + $this->toHtml->labels;
-        return $this->toHtml;
-    }
-
-    /**
-     * @return Paginate
-     */
-    public function getPaginate()
-    {
-        $paginate = $this->paginate ?: new Paginate($this->getToHtmlBootstrap());
-        $paginate->aria($this->aria);
-        $paginate->numLinks($this->num_links);
-        return $paginate;
+        return $this->toHtml->withPaginate($this->getPaginate())->toString();
     }
 }

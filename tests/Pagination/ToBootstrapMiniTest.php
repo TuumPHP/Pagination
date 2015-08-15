@@ -2,6 +2,7 @@
 namespace tests\Pagination;
 
 use Tuum\Pagination\Html\PaginateMini;
+use Tuum\Pagination\Html\ToHtmlBootstrap;
 use Tuum\Pagination\Inputs;
 use Tuum\Pagination\Pager;
 use Zend\Diactoros\ServerRequest;
@@ -35,12 +36,11 @@ class ToBootstrapMiniTest extends \PHPUnit_Framework_TestCase
         $inputs= $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(200);
         });
-        $paginate = $inputs->paginate(new PaginateMini());
-        $html  = $paginate->__toString();
-        $this->assertContains("<li class='active'><a href='#' >2</a></li>", $html);
-        $this->assertContains("<li><a href='/test?_page=3' >3</a></li>", $html);
-        $this->assertContains("<li><a href='/test?_page=7' >7</a></li>", $html);
-        $this->assertContains("<li><a href='/test?_page=40' aria-label=\"last page\" >&raquo;</a></li>", $html);
+        $pages = PaginateMini::forge()->withInputs($inputs);
+        $lists = $pages->toArray();
+        $this->assertEquals(['rel' => 1, 'href' => '/test?_page=1', 'aria' => null], $lists[0]);
+        $this->assertEquals(['rel' => 2, 'href' => '#', 'aria' => null], $lists[1]);
+        $this->assertEquals(['rel' => 'last', 'href' => '/test?_page=40', 'aria' => 'last page'], $lists[11]);
     }
 
     /**
@@ -55,9 +55,8 @@ class ToBootstrapMiniTest extends \PHPUnit_Framework_TestCase
         $inputs= $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(200);
         });
-        $toHtml = new PaginateMini();
-        $toHtml->num_links = 2;
-        $html  = (string) $inputs->paginate($toHtml);
+        $pages = PaginateMini::forge()->numLinks(2)->withInputs($inputs);
+        $html  = ToHtmlBootstrap::forge()->withPaginate($pages)->toString();
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"first page\" >&laquo;</a></li>", $html);
         $this->assertContains("<li class='active'><a href='#' >4</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=2' >2</a></li>", $html);

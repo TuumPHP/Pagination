@@ -199,16 +199,4 @@ class Inputs
         $page = (int)$page;
         return $this->path . '?' . $this->pagerKey . '=' . $page;
     }
-
-    /**
-     * set up ToStringInterface objects to output html pagination.
-     *
-     * @API
-     * @param PaginateInterface $paginate
-     * @return PaginateInterface
-     */
-    public function paginate(PaginateInterface $paginate)
-    {
-        return $paginate->withRequestAndInputs($this->path, $this);
-    }
 }

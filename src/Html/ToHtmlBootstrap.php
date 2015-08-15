@@ -18,7 +18,17 @@ class ToHtmlBootstrap implements ToHtmlInterface
      */
     public $ul_class = 'pagination';
 
+    /**
+     * @var string
+     */
     public $default_type = 'disable';
+
+    /**
+     * must be an output from PaginateInterface's toArray() method.
+     *
+     * @var array
+     */
+    private $pages;
 
     /**
      * @param array $labels
@@ -26,6 +36,13 @@ class ToHtmlBootstrap implements ToHtmlInterface
     public function __construct(array $labels = [])
     {
         $this->labels = $labels + $this->labels;
+    }
+
+    public function withPaginate(PaginateInterface $paginate)
+    {
+        $self = clone($this);
+        $self->pages = $paginate->toArray();
+        return $self;
     }
 
     /**
@@ -38,18 +55,24 @@ class ToHtmlBootstrap implements ToHtmlInterface
     }
 
     /**
-     * @param PaginateInterface $paginate
      * @return string
      */
-    public function toString(PaginateInterface $paginate)
+    public function toString()
     {
-        $pages = $paginate->toArray();
         $html = '';
-        foreach ($pages as $info) {
+        foreach ($this->pages as $info) {
             $html .= $this->listItem($info);
         }
 
         return "<ul class=\"{$this->ul_class}\">\n{$html}</ul>\n";
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toString();
     }
 
     /**

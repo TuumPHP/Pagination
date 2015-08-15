@@ -9,10 +9,20 @@ namespace Tuum\Pagination\Html;
 interface ToHtmlInterface
 {
     /**
+     * @param PaginateInterface $paginate
+     * @return $this
+     */
+    public function withPaginate(PaginateInterface $paginate);
+
+    /**
      * construct HTML (i.e. string) from PaginateInterface::toArray.
      *
-     * @param PaginateInterface $paginate
      * @return string
      */
-    public function toString(PaginateInterface $paginate);
+    public function toString();
+
+    /**
+     * @return string
+     */
+    public function __toString();
 }

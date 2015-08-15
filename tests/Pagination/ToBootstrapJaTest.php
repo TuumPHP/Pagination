@@ -2,6 +2,8 @@
 namespace tests\Pagination;
 
 use Tuum\Pagination\Factory\PageJa;
+use Tuum\Pagination\Html\Paginate;
+use Tuum\Pagination\Html\ToHtmlBootstrap;
 use Tuum\Pagination\Inputs;
 use Tuum\Pagination\Pager;
 use Zend\Diactoros\ServerRequest;
@@ -30,12 +32,12 @@ class ToBootstrapJaTest extends \PHPUnit_Framework_TestCase
      */
     function get_bootstrap_style_html()
     {
-        $paginate = PageJa::start()->numLinks(2)->getPaginate();
         $pager = (new Pager(['_limit'=>15]))->withQuery(['_page' => 4], '/test');
-        $inputs= $pager->call(function(Inputs $inputs) {
+        $inputs = $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(200);
         });
-        $html  = $inputs->paginate($paginate)->__toString();
+        $pages = Paginate::forge(PageJa::$aria)->numLinks(2)->withInputs($inputs);
+        $html  = ToHtmlBootstrap::forge(PageJa::$label)->withPaginate($pages)->toString();
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"最初のページ\" >≪</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=3' aria-label=\"前のページ\" >前</a></li>", $html);
         $this->assertNotContains("<li><a href='/test?_page=1' >1</a></li>", $html);

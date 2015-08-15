@@ -33,25 +33,20 @@ abstract class AbstractPaginate implements PaginateInterface
     public $num_links = 5;
 
     /**
-     * @var ToHtmlInterface
+     * @param array $aria
      */
-    public $toHtml;
-
-    /**
-     * @param null|ToHtmlInterface $toHtml
-     */
-    public function __construct($toHtml = null)
+    public function __construct(array $aria=[])
     {
-        $this->toHtml = $toHtml;
+        $this->aria_label = $aria + $this->aria_label;
     }
 
     /**
-     * @param null|ToHtmlInterface $toHtml
+     * @param array $aria
      * @return AbstractPaginate
      */
-    public static function forge($toHtml = null)
+    public static function forge(array $aria=[])
     {
-        $self = new static($toHtml);
+        $self = new static($aria);
         return $self;
     }
 
@@ -66,46 +61,17 @@ abstract class AbstractPaginate implements PaginateInterface
     }
 
     /**
-     * @param array $aria
-     * @return $this
-     */
-    public function aria(array $aria)
-    {
-        $this->aria_label = $aria + $this->aria_label;
-        return $this;
-    }
-    /**
      * @API
-     * @param string $path
      * @param Inputs $inputs
      * @return $this
      */
-    public function withRequestAndInputs($path, $inputs)
+    public function withInputs(Inputs $inputs)
     {
         $self           = clone($this);
-        $self->path     = $path;
+        $self->path     = $inputs->path;
         $self->inputs   = $inputs;
         $self->currPage = $inputs->getPage();
         return $self;
-    }
-
-    /**
-     * @API
-     * @param ToHtmlInterface $toHtml
-     * @return string
-     */
-    public function toHtml($toHtml = null)
-    {
-        $toHtml = $toHtml ?: ($this->toHtml ?: new ToHtmlBootstrap());
-        return $toHtml->toString($this);
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->toHtml();
     }
 
     /**

@@ -11,11 +11,10 @@ use Tuum\Pagination\Inputs;
 interface PaginateInterface
 {
     /**
-     * @param string $path
      * @param Inputs $inputs
-     * @return PaginateInterface
+     * @return $this
      */
-    public function withRequestAndInputs($path, $inputs);
+    public function withInputs(Inputs $inputs);
 
     /**
      * constructs an array of page information.
@@ -32,17 +31,4 @@ interface PaginateInterface
      * @return array
      */
     public function toArray();
-
-    /**
-     * @API
-     * @param ToHtmlInterface $toHtml
-     * @return string
-     */
-    public function toHtml($toHtml = null);
-
-    /**
-     * @API
-     * @return string
-     */
-    public function __toString();
 }
