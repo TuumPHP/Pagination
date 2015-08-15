@@ -95,10 +95,10 @@ class Pager
      */
     public function withRequest($request)
     {
-        $self = clone($this);
-        $self->setSessionName($request->getUri()->getPath());
-        $self->loadPageKey($request->getQueryParams());
-        return $self;
+        return $this->withQuery(
+            $request->getQueryParams(),
+            $request->getUri()->getPath()
+        );
     }
 
     /**
@@ -144,7 +144,9 @@ class Pager
     private function secureInput(array $query)
     {
         $secure = $this->validator ?: function (&$v) {
-            if (strpos($v, "\0") !== false) {
+            if (!is_string($v) && !is_numeric($v)) {
+                $v = '';
+            } elseif (strpos($v, "\0") !== false) {
                 $v = '';
             } elseif (!mb_check_encoding($v, 'UTF-8')) {
                 $v = '';
