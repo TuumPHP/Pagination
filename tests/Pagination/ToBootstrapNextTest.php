@@ -55,7 +55,7 @@ class ToBootstrapNextTest extends \PHPUnit_Framework_TestCase
         $inputs = new Inputs();
         $pager = (new Pager([], $inputs))->withRequest($req);
         $pager = $pager->withRequest($req->withQueryParams(['_page' => 4]));
-        $html = Pagination::forge($pager)->call(function(Inputs $inputs) {
+        $html = Pagination::forge()->withPager($pager)->call(function(Inputs $inputs) {
             $inputs->setTotal(200);
         })->toHtml();
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"first page\" >&laquo;</a></li>", $html);

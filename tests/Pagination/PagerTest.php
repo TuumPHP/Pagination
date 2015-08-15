@@ -6,7 +6,7 @@ use Tuum\Pagination\Pager;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Uri;
 
-class PaginationTest extends \PHPUnit_Framework_TestCase
+class PagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var Pager

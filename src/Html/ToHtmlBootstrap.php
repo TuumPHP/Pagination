@@ -55,6 +55,16 @@ class ToHtmlBootstrap implements ToHtmlInterface
     }
 
     /**
+     * @param array $labels
+     * @return $this
+     */
+    public function setLabels(array $labels)
+    {
+        $this->labels = array_merge($this->labels, $labels);
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function toString()

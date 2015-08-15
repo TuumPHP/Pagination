@@ -17,6 +17,18 @@ interface PaginateInterface
     public function withInputs(Inputs $inputs);
 
     /**
+     * @param int $num
+     * @return $this
+     */
+    public function numLinks($num);
+
+    /**
+     * @param array $aria
+     * @return $this
+     */
+    public function setAria(array $aria);
+
+    /**
      * constructs an array of page information.
      *   $pages = array(
      *     [...page info...], [...]

@@ -61,6 +61,16 @@ abstract class AbstractPaginate implements PaginateInterface
     }
 
     /**
+     * @param array $aria
+     * @return $this
+     */
+    public function setAria(array $aria)
+    {
+        $this->aria_label = array_merge($this->aria_label, $aria);
+        return $this;
+    }
+
+    /**
      * @API
      * @param Inputs $inputs
      * @return $this
