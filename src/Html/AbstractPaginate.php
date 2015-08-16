@@ -56,7 +56,9 @@ abstract class AbstractPaginate implements PaginateInterface
      */
     public function numLinks($num)
     {
-        $this->num_links = $num;
+        if (is_numeric($num) && $num > 0) {
+            $this->num_links = $num;
+        }
         return $this;
     }
 
