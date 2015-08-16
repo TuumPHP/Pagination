@@ -26,12 +26,7 @@ class Pagination
      * number of links used in PaginateInterface objects.
      * @var int
      */
-    public $num_links = 3;
-
-    /**
-     * @var Pager
-     */
-    protected $pager;
+    public $num_links = 0;
 
     /**
      * @var PaginateInterface
@@ -74,22 +69,12 @@ class Pagination
 
     /**
      * @param Pager $pager
+     * @param \Closure $callback
      * @return Pagination
      */
-    public function withPager(Pager $pager)
+    public function call(Pager $pager, $callback)
     {
-        $self        = clone($this);
-        $self->pager = $pager;
-        return $self;
-    }
-
-    /**
-     * @param \Closure $callback
-     * @return $this
-     */
-    public function call($callback)
-    {
-        $this->inputs = $this->pager->call($callback);
+        $this->inputs = $pager->call($callback);
         return $this;
     }
 

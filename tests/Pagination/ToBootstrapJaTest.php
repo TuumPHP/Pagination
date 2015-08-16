@@ -31,12 +31,11 @@ class ToBootstrapJaTest extends \PHPUnit_Framework_TestCase
     function get_bootstrap_style_html()
     {
         $pager = (new Pager(['_limit'=>15]))->withQuery(['_page' => 4], '/test');
-        $pages = PageJa::forge()->withPager($pager);
+        $pages = PageJa::forge();
         $pages->num_links = 2;
-        $pages = $pages->call(function(Inputs $inputs) {
+        $html = $pages->call($pager, function(Inputs $inputs) {
             $inputs->setTotal(200);
-        });
-        $html  = $pages->toHtml();
+        })->toHtml();
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"最初のページ\" >≪</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=3' aria-label=\"前のページ\" >前</a></li>", $html);
         $this->assertNotContains("<li><a href='/test?_page=1' >1</a></li>", $html);
