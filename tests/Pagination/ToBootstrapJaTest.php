@@ -2,8 +2,6 @@
 namespace tests\Pagination;
 
 use Tuum\Pagination\Factory\PageJa;
-use Tuum\Pagination\Html\Paginate;
-use Tuum\Pagination\Html\ToHtmlBootstrap;
 use Tuum\Pagination\Inputs;
 use Tuum\Pagination\Pager;
 use Zend\Diactoros\ServerRequest;
