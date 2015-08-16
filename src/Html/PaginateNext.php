@@ -23,7 +23,7 @@ class PaginateNext extends AbstractPaginate
         $pages = array_merge($pages, $page_list);
         $pages = $this->constructPageIfNotInPages('next', $pages, $page_list);
 
-        return $this->addAriaLabel($pages);
+        return $pages;
     }
 
     protected function fillUpToPages()

@@ -18,6 +18,6 @@ class Paginate extends AbstractPaginate
         $pages[] = $this->constructPage('next');
         $pages[] = $this->constructPage('last');
 
-        return $this->addAriaLabel($pages);
+        return $pages;
     }
 }

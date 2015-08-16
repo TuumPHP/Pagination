@@ -90,22 +90,9 @@ abstract class AbstractPaginate implements PaginateInterface
     protected function fillPages()
     {
         $numLinks = $this->num_links;
-        $currPage = $this->inputs->getPage();
-        $lastPage = $this->inputs->calcLastPage();
-
-        $extra_1  = max(0, $numLinks - $currPage);
-        $extra_2  = max(0, $numLinks - ($lastPage - $currPage));
-        if ($extra_1 > 0 || $currPage === $numLinks) {
-            $extra_2 += $extra_1 + 1;
-        }
-        if ($extra_2 > 0) {
-            $extra_1 += $extra_2;
-        }
-        $start    = max($currPage - $numLinks - $extra_1, $this->inputs->calcFirstPage());
-        $last     = min($currPage + $numLinks + $extra_2, $this->inputs->calcLastPage());
-
+        $lists = $this->inputs->calcPageList($numLinks);
         $pages = [];
-        for ($page = $start; $page <= $last; $page++) {
+        foreach ($lists as $page) {
             $pages[$page] = $this->constructPage($page);
         }
         return $pages;
@@ -135,20 +122,8 @@ abstract class AbstractPaginate implements PaginateInterface
         $pageNum = $this->calcPageNum($page);
         $href = ($pageNum == $this->inputs->getPage()) ?
             '#' : $this->inputs->getPath($pageNum);
-        return ['rel' => $page, 'href' => $href];
-    }
-
-    /**
-     * @param array $pages
-     * @return array
-     */
-    protected function addAriaLabel(array $pages)
-    {
-        foreach ($pages as $key => $page) {
-            $rel                 = $page['rel'];
-            $pages[$key]['aria'] = isset($this->aria_label[$rel]) ? $this->aria_label[$rel] : '';
-        }
-        return $pages;
+        $aria = isset($this->aria_label[$page]) ? $this->aria_label[$page]: '';
+        return ['rel' => $page, 'href' => $href, 'aria' => $aria];
     }
 
     /**

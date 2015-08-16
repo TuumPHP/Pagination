@@ -23,6 +23,6 @@ class PaginateMini extends AbstractPaginate
         $pages = array_merge($pages, $page_list);
         $pages = $this->constructPageIfNotInPages('last', $pages, $page_list);
 
-        return $this->addAriaLabel($pages);
+        return $pages;
     }
 }
