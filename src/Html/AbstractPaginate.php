@@ -134,14 +134,13 @@ abstract class AbstractPaginate implements PaginateInterface
      */
     protected function calcPageNum($page)
     {
-        if (!is_numeric($page) && is_string($page)) {
+        if (is_numeric($page) ) {
+            return $page;
+        } elseif (is_string($page)) {
             $method  = 'calc' . ucwords($page) . 'Page';
             $pageNum = $this->inputs->$method();
             return $pageNum;
-        } else {
-            $pageNum = $page;
-            return $pageNum;
         }
+        throw new \RuntimeException;
     }
-
 }
