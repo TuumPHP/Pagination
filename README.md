@@ -4,16 +4,16 @@ Generic Pagination
 a generic pagination class for PSR-7. 
 
 Designed to keep the current page number and form input in session to simplify query code. 
-Also a flexibility of pagination output and html/css format is in mind.   
+
+Also provides flexibile pagination HTML generators. 
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/TuumPHP/Pagination/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/TuumPHP/Pagination/?branch=master)
+
+PSR: PSR-1, PSR-2, PSR-4, and PSR-7.
 
 ### License
 
 MIT license
-
-Getting Started
-----
 
 ### installation
 
@@ -24,12 +24,28 @@ $ composer require "tuum/pagination"
 ```
 
 
-### sample code
+Getting Started with a Sample Code
+----
 
-First, instantiate a Pager class. 
+### sample HTML form
+
+Let's start with an HTML form for a pagination, for example; 
+
+```html
+<form>
+  <input type="text" name="type" />
+  <input type="integer" name="num" />
+  <input type="submit" />
+</form>
+```
+
+Please note that there should be **no `_page` variables which indicates the page number**. 
+
+### constructing a pager
+
+To instantiate a Pager class, 
 
 ```php
-use WScore\Pagination\Inputs;
 use WScore\Pagination\Pager;
 
 // construction
@@ -37,14 +53,18 @@ $pager = new Pager(['_limit' => 15]);
 
 // set up pager using Psr-7 ServerRequestInterface.
 $pager = $pager->withRequest($request);
-// or from global data. 
+// or from globa. 
 $pager = $pager->withQuery($_GET, '/find');
 ```
+
+The pager object will store the query data (i.e. $_GET) to session for the subsequent requests if the session is already started. 
+
+### paginating a query
 
 Then, call a `Pager::call` method with a `closure` whose first argument is an `Inputs` object. 
 
 ```php
-// query 
+/** @var $inputs WScore\Pagination\Inputs */ 
 $inputs = $pager->call(
     function(Inputs $inputs) use($pdo) {
         // query the PDO!
@@ -62,51 +82,55 @@ $found = $inputs->getList();
 $type  = $inputs->get('type');
 ```
 
-There is a default bootstrap pagination html. 
+The `type` and `num` values are either taken from the form input (if no _page is present), or from a session data (if _page is present). 
+
+### generating pagination HTML 
+
+There is a simplified class, `Pagination`, which can generate  pagination HTML for Twitter's bootstrap ver3. 
 
 ```php
-use WScore\Pagination\Html\Paginate;
+use WScore\Pagination\Html\Factory\Pagination;
+$pages = Pagination::forge();
+$pages->num_links = 3;
+$pages->label['first'] = '|<<';
+$pages->aria['first'] = 'the first page';
 
-$pages = $inputs->paginate(new Paginate());
-echo $pages->__toString();
+// current code works like,
+$pages = $pages->call($pager, function(Inputs $input) {...});
+// but, maybe in the future,
+$pages = $pages->withInputs($inputs);
+
+// in the view. 
+echo $pages->toHtml();
 ```
 
+* [ ] [add sample image here...]
 
-Constructing an HTML Form
+Technical Details
 -----
+
+### about the _page variable
 
 The page key, `_page`, is the key. 
 
-### initial query
+#### without _page
 
-Construct a query form **without `_page` key**. 
+When the `_page` variable is present in a query, the Pager will store all the query data (i.e. $_GET) into the session. The page number is default to 1. 
 
-```html
-<form>
-<input type="text" name="type" />
-<input type="integer" name="num" />
-<input type="submit" />
-</form>
-```
+#### _page with page number
 
-Pager will store the query data (i.e. $_GET) to session for the subsequent requests. 
-So, please start the session in prior. 
-
-### query with page number 
-
-Get request **with only the page number** will set the offset according to the page. For instance, 
+Requesting with **only the page number** will restore the query values (type and num) from the session, and set the offset value  from the page number. For instance, 
 
 ```
 GET /find?_page=2
 ```
 
-will set offset according to the page #2. 
+will set offset, `(_page-1)*_limit`, with the page number being `2`. 
 
-For other parameters, such as `type` and `num`, the values are restored from the session; thus supplying the same value as the initial query. 
 
-### query with only _page
+#### query with only _page
 
-Get request with **`_page` but no page number** will restore the page number and other parameters from the session. For instance, 
+Requesting with **`_page` but no page number** will restore the page number and other parameters from the session. For instance, 
 
 ```
 GET /find?_page
@@ -114,12 +138,10 @@ GET /find?_page
 
 will set offset to the page number of last request. 
 
-Other Information
------
 
 ### setting a total
 
-The pager does not know how to get a total; please supply the total count in the closure for the call method; 
+The pager does not know how to get a total; please supply the total count in the closure inside the call method usging `Inputs::setTotal` method; 
 
 ```php
 // query 
@@ -156,7 +178,9 @@ FYI: this is the default closure.
 
 ```php
 function (&$v) {
-    if (strpos($v, "\0") !== false) {
+	if (!is_string($v) && !is_numeric($v)) {
+        $v = '';
+    } elseif (strpos($v, "\0") !== false) {
         $v = '';
     } elseif (!mb_check_encoding($v, 'UTF-8')) {
         $v = '';
@@ -164,31 +188,37 @@ function (&$v) {
 };
 ```
 
-Output Pagination Html
+Generating Pagination Html
 ----
 
-### using `Pagination` builder
+There are two principal interfaces to generate a pagination HTML: `PaginateInterface` and `ToHtmlInterface`. 
 
-Pagination builder helps to construct a pagination object. examples:
+### `PaginateInterface` objects
+
+The PaginateInterface is responsible to construct the basic elements of pagination; first, prev, next, last, and each pages. In some cases, you may or may not want first elements. 
 
 ```php
-use Tuum\Pagination\Factory\Pagination;
-
-$pages = Pagination::start()
-    ->numLinks(3)
-    ->label([
-        'first' => '1st',
-    ])
-    ->aria([
-        'first' => '1st page',
-    ])
-    ->pagination(new PaginateNext())
-    ->getPaginate();
-$pages = $inputs->paginate($pages);
-echo $pages->__toString();
+$paginate = (new Paginate)->withInputs($inputs);
+$pages    = $paginate->toArray();
 ```
 
-#### `PaginateInterface` objects
+the `toArray` method returns an array, consisted of;
+
+```php
+$array = array(
+	[ 'rel' => 'first', 
+	  'href' => 'test?_page=1', 
+	  'aria' => 'first page' ],
+	...
+);
+```
+
+where, 
+
+*   `rel`: shows relation to the current page. Either of 'first', 'next', 'prev', 'last', or numeric page numbers. 
+*   `href`: url to the page. 
+*   `aria`: for aria-label.
+
 
 There are 3 implementations of PaginateInterface:
 
@@ -196,58 +226,15 @@ There are 3 implementations of PaginateInterface:
 *   `PaginateMini`
 *   `PaginateNext`
 
-> TODO: supply sample image of pagination for each class.
+* [ ] supply sample image of pagination for each class.
 
 
-### inside the Pagination
 
-There are two interfaces for outputing an HTML: 
+### `ToHtmlInterface` objects
 
-*   `PaginateInterface` for creating an array of page information, and 
-*   `ToHtmlInterface` for converting the array to HTML code. 
-
-To create html pagination component, create an object implementing `PaginateInterface` and supply it to the Inputs object;
+The `ToHtmlInterface ` objects takes a `PaginateInterface` object and convert into an HTML. Currently, there is only one implementation: `ToHtmlBootstrap`.
 
 ```php
-class MyPagination implements PaginateInterface {...}
-class MyHtml implements ToHtmlInterface {...}
-
-$inputs= $pager->call(function...);
-
-// convert to HTML
-$pages = $inputs->paginate(new MyPagination);
-$htmls = $pages->toHtml($new MyHtml);
+echo ToHtmlBootstrap::forge()->withPaginate($paginate)->__toString();
 ```
 
-
-#### `PaginateInterface::toArray` method
-
-The main API of the `PaginateInterface` is the `toArray` method, which construct an array of pages with following information:
-
-*   `rel`: shows relation to the current page. Either of 'first', 'next', 'prev', 'last', or numeric page numbers. 
-*   `href`: url to the page. 
-*   `aria`: for aria-label.
-
-as such, the array may look like;
-
-```php
-$pages = array(
-    [
-        'rel' => 'first', 
-        'href' => '/t?_page=1', 
-        'aria' => 'first page'
-    ], ...
-);
-```
-
-#### `PaginateInterface::toHtml` method
-
-The `PaginateInterface::toHtml` method takes an object implementing `ToHtmlInterface`, then converts the pages array into an HTML code. There is only one implementation of the `ToHtmlInterface`, `ToHtmlBootstrap`.
-
-```php
-$pages = $inputs->paginate(new Paginate());
-$htmls = $pages->toHtml(new ToHtmlBootstrap());
-echo $htmls;
-```
-
-The `PaginateInterface::__toString` method simply calls the `toHtml` method without arguments. 
