@@ -19,9 +19,13 @@ class PaginateMini extends AbstractPaginate
         $page_list = $this->fillPages();
 
         $pages = [];
-        $pages = $this->constructPageIfNotInPages('first', $pages, $page_list);
+        if (!$this->checkIfInPageList('first', $page_list)) {
+            $pages[] = $this->constructPage('first');
+        }
         $pages = array_merge($pages, $page_list);
-        $pages = $this->constructPageIfNotInPages('last', $pages, $page_list);
+        if (!$this->checkIfInPageList('last', $page_list)) {
+            $pages[] = $this->constructPage('last');
+        }
 
         return $pages;
     }

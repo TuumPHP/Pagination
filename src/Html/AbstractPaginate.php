@@ -101,18 +101,14 @@ abstract class AbstractPaginate implements PaginateInterface
     }
 
     /**
-     * @param string $page
-     * @param array  $pages
-     * @param array  $page_list
-     * @return array
+     * @param string|int  $page
+     * @param array       $page_list
+     * @return bool
      */
-    protected function constructPageIfNotInPages($page, array $pages, array $page_list)
+    protected function checkIfInPageList($page, array $page_list)
     {
         $pageNum = $this->calcPageNum($page);
-        if (!isset($page_list[$pageNum])) {
-            $pages[] = $this->constructPage($page);
-        }
-        return $pages;
+        return isset($page_list[$pageNum]);
     }
 
     /**
