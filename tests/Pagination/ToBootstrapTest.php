@@ -40,16 +40,16 @@ class ToBootstrapTest extends \PHPUnit_Framework_TestCase
         });
         $pages = Paginate::forge()->numLinks(2)->withInputs($inputs);
         $html  = ToHtmlBootstrap::forge()->withPaginate($pages)->toString();
-        $this->assertContains("<li><a href='/test?_page=1' aria-label=\"first page\" >&laquo;</a></li>", $html);
-        $this->assertContains("<li><a href='/test?_page=3' aria-label=\"previous page\" >prev</a></li>", $html);
+        $this->assertContains("<li><a href='/test?_page=1' aria-label=\"first page\" >First</a></li>", $html);
+        $this->assertContains("<li><a href='/test?_page=3' aria-label=\"previous page\" >&laquo;</a></li>", $html);
         $this->assertNotContains("<li><a href='/test?_page=1' >1</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=2' >2</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=3' >3</a></li>", $html);
         $this->assertContains("<li class='active'><a href='#' >4</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=6' >6</a></li>", $html);
         $this->assertNotContains("<li><a href='/test?_page=7' >7</a></li>", $html);
-        $this->assertContains("<li><a href='/test?_page=5' aria-label=\"next page\" >next</a></li>", $html);
-        $this->assertContains("<li><a href='/test?_page=10' aria-label=\"last page\" >&raquo;</a></li>", $html);
+        $this->assertContains("<li><a href='/test?_page=5' aria-label=\"next page\" >&raquo;</a></li>", $html);
+        $this->assertContains("<li><a href='/test?_page=10' aria-label=\"last page\" >Last</a></li>", $html);
     }
 
     /**
@@ -65,12 +65,12 @@ class ToBootstrapTest extends \PHPUnit_Framework_TestCase
         });
         $pages = Paginate::forge()->withInputs($inputs);
         $html  = ToHtmlBootstrap::forge()->withPaginate($pages)->toString();
-        $this->assertContains("<li><a href='/test?_page=1' aria-label=\"first page\" >&laquo;</a></li>", $html);
-        $this->assertContains("<li><a href='/test?_page=1' aria-label=\"previous page\" >prev</a></li>", $html);
+        $this->assertContains("<li><a href='/test?_page=1' aria-label=\"first page\" >First</a></li>", $html);
+        $this->assertContains("<li><a href='/test?_page=1' aria-label=\"previous page\" >&laquo;</a></li>", $html);
         $this->assertContains("<li class='active'><a href='#' >2</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=3' >3</a></li>", $html);
-        $this->assertContains("<li><a href='/test?_page=3' aria-label=\"next page\" >next</a></li>", $html);
-        $this->assertContains("<li><a href='/test?_page=3' aria-label=\"last page\" >&raquo;</a></li>", $html);
+        $this->assertContains("<li><a href='/test?_page=3' aria-label=\"next page\" >&raquo;</a></li>", $html);
+        $this->assertContains("<li><a href='/test?_page=3' aria-label=\"last page\" >Last</a></li>", $html);
     }
 
     /**
@@ -88,7 +88,7 @@ class ToBootstrapTest extends \PHPUnit_Framework_TestCase
         $pages = Paginate::forge(['first' => '1st page'])->withInputs($inputs);
         $html  = ToHtmlBootstrap::forge(['first' => '1st'])->withPaginate($pages)->toString();
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"1st page\" >1st</a></li>", $html);
-        $this->assertContains("<li><a href='/test?_page=1' aria-label=\"previous page\" >prev</a></li>", $html);
+        $this->assertContains("<li><a href='/test?_page=1' aria-label=\"previous page\" >&laquo;</a></li>", $html);
         $this->assertContains("<li class='active'><a href='#' >2</a></li>", $html);
     }
 }

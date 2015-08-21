@@ -7,10 +7,10 @@ class ToHtmlBootstrap implements ToHtmlInterface
      * @var array
      */
     public $labels = [
-        'first'     => '&laquo;',
-        'prev'      => 'prev',
-        'next'      => 'next',
-        'last'      => '&raquo;',
+        'first'     => 'First',
+        'prev'      => '&laquo;',
+        'next'      => '&raquo;',
+        'last'      => 'Last',
     ];
 
     /**
