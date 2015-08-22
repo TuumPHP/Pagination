@@ -113,15 +113,16 @@ abstract class AbstractPaginate implements PaginateInterface
 
     /**
      * @param string|int $page
+     * @param string     $label
      * @return array
      */
-    protected function constructPage($page)
+    protected function constructPage($page, $label = '')
     {
         $pageNum = $this->calcPageNum($page);
         $href = ($pageNum == $this->inputs->getPage()) ?
             '#' : $this->inputs->getPath($pageNum);
         $aria = isset($this->aria_label[$page]) ? $this->aria_label[$page]: '';
-        return ['rel' => $page, 'href' => $href, 'aria' => $aria];
+        return ['rel' => $page, 'href' => $href, 'aria' => $aria, 'label' => $label, 'page' => $pageNum];
     }
 
     /**

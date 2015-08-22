@@ -23,6 +23,8 @@ class ToHtmlBootstrap implements ToHtmlInterface
      */
     public $default_type = 'disable';
 
+    public $empty_li = "<li class='disable'><a href='#' >..</a></li>";
+    
     /**
      * must be an output from PaginateInterface's toArray() method.
      *
@@ -91,26 +93,32 @@ class ToHtmlBootstrap implements ToHtmlInterface
      */
     private function listItem(array $info)
     {
-        $label = isset($info['rel']) ? $info['rel'] : '';
+        if (empty($info)) {
+            return $this->empty_li;
+        }
+        $page  = isset($info['page']) ? $info['page'] : 1;
+        $rel   = isset($info['rel']) ? $info['rel'] : '';
         $href  = isset($info['href']) ? $info['href'] : '';
         $aria  = isset($info['aria']) ? $info['aria'] : '';
-        return $this->bootLi($label, $href, $aria);
+        $label = isset($info['label']) && $info['label'] ? $info['label'] : 
+            (isset($this->labels[$rel]) ? $this->labels[$rel] : $rel);
+        return $this->bootLi($label, $href, $aria, $page);
     }
 
     /**
-     * @param string $rel
+     * @param string $label
      * @param string $href
      * @param string $aria
+     * @param int    $page
      * @return string
      */
-    private function bootLi($rel, $href, $aria)
+    private function bootLi($label, $href, $aria, $page)
     {
-        $label = isset($this->labels[$rel]) ? $this->labels[$rel] : $rel;
         $srLbl = $aria ? " aria-label=\"{$aria}\"" : '';
         if ($href != '#') {
             $html = "<li><a href='{$href}'";
             $html .= $srLbl . " >{$label}</a></li>\n";
-        } elseif (is_numeric($rel)) {
+        } elseif (is_numeric($label)) {
             $html = "<li class='active'><a href='#' >{$label}</a></li>\n";
         } else {
             $html = "<li class='disabled'><a href='#' >{$label}</a></li>\n";
