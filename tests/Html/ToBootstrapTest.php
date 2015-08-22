@@ -1,5 +1,5 @@
 <?php
-namespace tests\Pagination;
+namespace tests\Html;
 
 use Tuum\Pagination\Html\Paginate;
 use Tuum\Pagination\Html\ToHtmlBootstrap;

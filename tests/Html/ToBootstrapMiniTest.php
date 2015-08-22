@@ -1,5 +1,5 @@
 <?php
-namespace tests\Pagination;
+namespace tests\Html;
 
 use Tuum\Pagination\Html\PaginateMini;
 use Tuum\Pagination\Inputs;
