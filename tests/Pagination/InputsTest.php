@@ -35,6 +35,7 @@ class InputsTest extends \PHPUnit_Framework_TestCase
         
         $i = $this->inputs;
         $this->assertEquals(3, $i->getPage());
+        $this->assertEquals(0, $i->getCount());
         $this->assertEquals(20, $i->getOffset());
         $this->assertEquals(10, $i->getLimit());
         $this->assertEquals(100, $i->getTotal());
@@ -77,6 +78,8 @@ class InputsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, $i->calcPrevPage());
         $this->assertEquals(3, $i->calcSelfPage());
         $this->assertEquals(4, $i->calcNextPage());
+        $this->assertTrue($i->existsNextPage());
+        $this->assertTrue($i->existsPrevPage());
         $this->assertEquals([1,2,3,4,5], $i->calcPageList(2));
     }
 }
