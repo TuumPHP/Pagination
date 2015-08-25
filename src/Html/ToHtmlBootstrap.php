@@ -23,7 +23,7 @@ class ToHtmlBootstrap implements ToHtmlInterface
      */
     public $default_type = 'disable';
 
-    public $empty_li = "<li class='disable'><a href='#' >..</a></li>";
+    public $empty_li = "<li class='disable'><a href='#' >...</a></li>";
     
     /**
      * must be an output from PaginateInterface's toArray() method.

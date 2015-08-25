@@ -108,7 +108,10 @@ abstract class AbstractPaginate implements PaginateInterface
     protected function checkIfInPageList($page, array $page_list)
     {
         $pageNum = $this->calcPageNum($page);
-        return isset($page_list[$pageNum]);
+        foreach( $page_list as $p) {
+            if($p['page'] === $pageNum) return true;
+        }
+        return false;
     }
 
     /**
