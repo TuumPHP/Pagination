@@ -1,7 +1,7 @@
 <?php
 namespace Tuum\Pagination\Factory;
 
-use Tuum\Pagination\Html\Paginate;
+use Tuum\Pagination\Html\PaginateMini;
 use Tuum\Pagination\Html\PaginateInterface;
 use Tuum\Pagination\Html\ToHtmlBootstrap;
 use Tuum\Pagination\Html\ToHtmlInterface;
@@ -51,7 +51,7 @@ class Pagination
         PaginateInterface $paginate = null,
         ToHtmlInterface $toHtml = null
     ) {
-        $this->paginate = $paginate ?: Paginate::forge();
+        $this->paginate = $paginate ?: PaginateMini::forge();
         $this->toHtml   = ToHtmlBootstrap::forge();
     }
 
