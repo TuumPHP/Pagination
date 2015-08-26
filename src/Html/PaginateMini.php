@@ -15,6 +15,9 @@ class PaginateMini extends AbstractPaginate
      */
     public function toArray()
     {
+        if ($this->num_links < 2) {
+            throw new \InvalidArgumentException('number of links must be larger than 2.');
+        }
         // list of pages, from $start till $last.
         $page_list = $this->fillPages();
 

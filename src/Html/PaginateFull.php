@@ -1,7 +1,7 @@
 <?php
 namespace Tuum\Pagination\Html;
 
-class Paginate extends AbstractPaginate
+class PaginateFull extends AbstractPaginate
 {
     /**
      * @return array

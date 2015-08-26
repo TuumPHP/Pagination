@@ -1,7 +1,7 @@
 <?php
 namespace tests\Html;
 
-use Tuum\Pagination\Html\Paginate;
+use Tuum\Pagination\Html\PaginateFull;
 use Tuum\Pagination\Html\ToHtmlBootstrap;
 use Tuum\Pagination\Inputs;
 use Tuum\Pagination\Pager;
@@ -38,7 +38,7 @@ class ToBootstrapTest extends \PHPUnit_Framework_TestCase
         $inputs= $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(200);
         });
-        $pages = Paginate::forge()->numLinks(2)->withInputs($inputs);
+        $pages = PaginateFull::forge()->numLinks(2)->withInputs($inputs);
         $html  = ToHtmlBootstrap::forge()->withPaginate($pages)->toString();
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"first page\" >First</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=3' aria-label=\"previous page\" >&laquo;</a></li>", $html);
@@ -63,7 +63,7 @@ class ToBootstrapTest extends \PHPUnit_Framework_TestCase
         $pager = $pager->withRequest($req->withQueryParams(['_page' => 2]));
         $inputs= $pager->call(function(Inputs $inputs) {
         });
-        $pages = Paginate::forge()->withInputs($inputs);
+        $pages = PaginateFull::forge()->withInputs($inputs);
         $html  = ToHtmlBootstrap::forge()->withPaginate($pages)->toString();
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"first page\" >First</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"previous page\" >&laquo;</a></li>", $html);
@@ -85,7 +85,7 @@ class ToBootstrapTest extends \PHPUnit_Framework_TestCase
         $inputs= $pager->call(function(Inputs $inputs) {
             $inputs->setTotal(35);
         });
-        $pages = Paginate::forge(['first' => '1st page'])->withInputs($inputs);
+        $pages = PaginateFull::forge(['first' => '1st page'])->withInputs($inputs);
         $html  = ToHtmlBootstrap::forge(['first' => '1st'])->withPaginate($pages)->toString();
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"1st page\" >1st</a></li>", $html);
         $this->assertContains("<li><a href='/test?_page=1' aria-label=\"previous page\" >&laquo;</a></li>", $html);
