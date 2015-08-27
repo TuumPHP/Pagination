@@ -74,10 +74,22 @@ class Pagination
      * @return static
      */
     public static function forge(
-        Pager $pager = null,
-        PaginateInterface $paginate = null,
-        ToHtmlInterface $toHtml = null
+        $pager = null,
+        $paginate = null,
+        $toHtml = null
     ) {
+        $objects = func_get_args();
+        foreach ($objects as $obj) {
+            if (!is_object($obj)) {
+                continue;
+            } elseif ($obj instanceof PaginateInterface) {
+                $paginate = $obj;
+            } elseif ($obj instanceof ToHtmlInterface) {
+                $toHtml = $obj;
+            } elseif ($obj instanceof Pager) {
+                $pager = $obj;
+            }
+        }
         $pager    = $pager ?: new Pager();
         $paginate = $paginate ?: PaginateMini::forge();
         $toHtml   = $toHtml ?: ToHtmlBootstrap::forge();
@@ -85,14 +97,19 @@ class Pagination
     }
 
     /**
+     * calls Pager using PSR-7 request.
+     * this is an immutable call; must accept the returning object.
+     * i.e. $pager = $pager->call($req, ...);
+     *
      * @param ServerRequestInterface $request
      * @param \Closure               $callback
      * @return static
      */
     public function call($request, $callback)
     {
-        $this->inputs = $this->pager->withRequest($request)->call($callback);
-        return $this;
+        $self = clone($this);
+        $self->inputs = $self->pager->withRequest($request)->call($callback);
+        return $self;
     }
 
     /**

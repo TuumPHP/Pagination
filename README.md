@@ -1,17 +1,19 @@
-Generic Pagination
-================
+Pagination
+==========
 
-a generic pagination class for PSR-7. 
+A generic pagination package for classic offset/limit style.
 
-Designed to keep the current page number and form input in session to simplify query code. 
+Some interesting features maybe:
 
-Also provides flexibile pagination HTML generators. 
+*   stores the current page and form inputs in session,
+*   can use PSR-7 ServerRequestInterface object,
+*   have a flexible pagination HTML generator.
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/TuumPHP/Pagination/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/TuumPHP/Pagination/?branch=master)
 
 ### PSR
 
-PSR: PSR-1, PSR-2, PSR-4, and PSR-7.
+PSR-1, PSR-2, PSR-4, and PSR-7.
 
 ### License
 
@@ -205,6 +207,13 @@ echo $pages->__toString();
 ```
 
 It uses `PaginateMini` and `ToHtmlBootstrap` as a default. 
+
+To use other pagination style, try something like:
+
+```php
+$pages = Pagination::forge(new PaginateFull());
+```
+
 
 Generating Pagination Html
 ----
