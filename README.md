@@ -9,6 +9,8 @@ Also provides flexibile pagination HTML generators.
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/TuumPHP/Pagination/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/TuumPHP/Pagination/?branch=master)
 
+### PSR
+
 PSR: PSR-1, PSR-2, PSR-4, and PSR-7.
 
 ### License
@@ -17,7 +19,7 @@ MIT license
 
 ### installation
 
-please use composer to install WScore/Pagination package. 
+Please use composer to install WScore/Pagination package. 
 
 ```sh
 $ composer require "tuum/pagination"
@@ -27,23 +29,25 @@ $ composer require "tuum/pagination"
 Getting Started with a Sample Code
 ----
 
+The page key variable, `_page`, is the key. 
+
 ### sample HTML form
 
 Let's start with an HTML form for a pagination, for example; 
 
 ```html
-<form>
+<form action="find">
   <input type="text" name="type" />
   <input type="integer" name="num" />
   <input type="submit" />
 </form>
 ```
 
-Please note that there should be **no `_page` variables which indicates the page number**. 
+Please note that there should be **no `_page` variables**. 
 
-### constructing a pager
+### paginating a query
 
-To instantiate a Pager class, 
+To instantiate a `Pager` class, 
 
 ```php
 use WScore\Pagination\Pager;
@@ -57,9 +61,7 @@ $pager = $pager->withRequest($request);
 $pager = $pager->withQuery($_GET, '/find');
 ```
 
-The pager object will store the query data (i.e. $_GET) to session for the subsequent requests if the session is already started. 
-
-### paginating a query
+The pager object will store the query data (i.e. `$_GET`) to session for the subsequent requests if the session is already started. 
 
 Then, call a `Pager::call` method with a `closure` whose first argument is an `Inputs` object. 
 
@@ -82,42 +84,12 @@ $found = $inputs->getList();
 $type  = $inputs->get('type');
 ```
 
-The `type` and `num` values are either taken from the form input (if no _page is present), or from a session data (if _page is present). 
+The `Inputs::get*` methods should provides information to construct queries. The `type` and `num` values are: 
 
-### generating pagination HTML 
+* taken from the form input and then saved to a session if no `_page` variables are present in the input query, or 
+* taken from a session data (if `_page` is present). 
 
-There is a simplified class, `Pagination`, which can generate  pagination HTML for Twitter's bootstrap ver3. 
-
-```php
-use WScore\Pagination\Html\Factory\Pagination;
-$pages = Pagination::forge();
-$pages->num_links = 3;
-$pages->label['first'] = '|<<';
-$pages->aria['first'] = 'the first page';
-
-// current code works like,
-$pages = $pages->call($pager, function(Inputs $input) {...});
-// but, maybe in the future,
-$pages = $pages->withInputs($inputs);
-
-// in the view. 
-echo $pages->toHtml();
-```
-
-* [ ] [add sample image here...]
-
-Technical Details
------
-
-### about the _page variable
-
-The page key, `_page`, is the key. 
-
-#### without _page
-
-When the `_page` variable is present in a query, the Pager will store all the query data (i.e. $_GET) into the session. The page number is default to 1. 
-
-#### _page with page number
+### `_page` with page number
 
 Requesting with **only the page number** will restore the query values (type and num) from the session, and set the offset value  from the page number. For instance, 
 
@@ -128,7 +100,7 @@ GET /find?_page=2
 will set offset, `(_page-1)*_limit`, with the page number being `2`. 
 
 
-#### query with only _page
+### query with only `_page`
 
 Requesting with **`_page` but no page number** will restore the page number and other parameters from the session. For instance, 
 
@@ -138,6 +110,33 @@ GET /find?_page
 
 will set offset to the page number of last request. 
 
+
+### generating pagination HTML 
+
+There is a simplified class, `Pagination`, which can generate  pagination HTML for Twitter's bootstrap ver3. 
+
+```php
+use Tuum\Pagination\Html\PaginateMini;
+use Tuum\Pagination\Html\ToHtmlBootstrap;
+
+// do some pager stuff above.
+$inputs = $pager->call(...);
+
+// generate pagination HTML for bootstrap.
+$htmlPages = ToHtmlBootstrap::forge()->withPaginate(
+    PaginateMini::forge()->withInputs($inputs)
+);
+echo $htmlPages->__toString(); // outputs the html.
+```
+
+The above code may generate the following HTML. The `PaginateMini` class creates the array of pages, and `ToHtmlBootstrap` converts the array into the HTML.
+
+![sample paginate HTML](./toHtmlMini.jpg)
+
+
+
+Technical Details
+-----
 
 ### setting a total
 
@@ -188,6 +187,25 @@ function (&$v) {
 };
 ```
 
+### Pagination class
+
+There is a `Tuum\Pagination\Factory\Pagination` class to simplify the construction of various objects. 
+
+```php
+use Tuum\Pagination\Inputs;
+use Tuum\Pagination\Factory\Pagination;
+
+$pages = Pagination::forge()->call(
+    $request, // Psr-7 ServerRequestInterface object.
+    function(Inputs $inputs) {
+        // do some query stuff.
+        $inputs->setTotal(200);
+    });
+echo $pages->__toString();
+```
+
+It uses `PaginateMini` and `ToHtmlBootstrap` as a default. 
+
 Generating Pagination Html
 ----
 
@@ -208,7 +226,10 @@ the `toArray` method returns an array, consisted of;
 $array = array(
 	[ 'rel' => 'first', 
 	  'href' => 'test?_page=1', 
-	  'aria' => 'first page' ],
+	  'page' => 1,
+	  'label' => 'First',
+	  'aria' => 'first page'
+	],
 	...
 );
 ```
@@ -217,16 +238,15 @@ where,
 
 *   `rel`: shows relation to the current page. Either of 'first', 'next', 'prev', 'last', or numeric page numbers. 
 *   `href`: url to the page. 
+*   `page`: the page number.
+*   `label`: labels used in the HTML. 
 *   `aria`: for aria-label.
 
 
-There are 3 implementations of PaginateInterface:
+Following implementations of PaginateInterface are available:
 
-*   `Paginate`
+*   `PaginateFull`
 *   `PaginateMini`
-*   `PaginateNext`
-
-* [ ] supply sample image of pagination for each class.
 
 
 
