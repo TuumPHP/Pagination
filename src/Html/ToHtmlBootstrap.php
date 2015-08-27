@@ -23,7 +23,7 @@ class ToHtmlBootstrap implements ToHtmlInterface
      */
     public $default_type = 'disable';
 
-    public $empty_li = "<li class='disable'><a href='#' >...</a></li>";
+    public $empty_li = "<li class=\"disable\"><a href=\"#\" >...</a></li>\n";
     
     /**
      * must be an output from PaginateInterface's toArray() method.
@@ -116,12 +116,12 @@ class ToHtmlBootstrap implements ToHtmlInterface
     {
         $srLbl = $aria ? " aria-label=\"{$aria}\"" : '';
         if ($href != '#') {
-            $html = "<li><a href='{$href}'";
+            $html = "<li><a href=\"{$href}\"";
             $html .= $srLbl . " >{$label}</a></li>\n";
         } elseif (is_numeric($label)) {
-            $html = "<li class='active'><a href='#' >{$label}</a></li>\n";
+            $html = "<li class=\"active\"><a href=\"#\" >{$label}</a></li>\n";
         } else {
-            $html = "<li class='disabled'><a href='#' >{$label}</a></li>\n";
+            $html = "<li class=\"disabled\"><a href=\"#\" >{$label}</a></li>\n";
         }
         return $html;
     }

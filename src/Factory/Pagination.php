@@ -1,6 +1,7 @@
 <?php
 namespace Tuum\Pagination\Factory;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Tuum\Pagination\Html\PaginateMini;
 use Tuum\Pagination\Html\PaginateInterface;
 use Tuum\Pagination\Html\ToHtmlBootstrap;
@@ -12,18 +13,21 @@ class Pagination
 {
     /**
      * for aria-labels used in PaginateInterface objects.
+     *
      * @var array
      */
     public $aria = [];
 
     /**
      * for labeling page link used in ToHtmlInterface objects.
+     *
      * @var array
      */
     public $label = [];
 
     /**
      * number of links used in PaginateInterface objects.
+     *
      * @var int
      */
     public $num_links = 0;
@@ -31,50 +35,63 @@ class Pagination
     /**
      * @var PaginateInterface
      */
-    protected $paginate = null;
+    public $paginate = null;
 
     /**
      * @var ToHtmlInterface
      */
-    protected $toHtml = null;
+    public $toHtml = null;
 
     /**
      * @var Inputs
      */
-    protected $inputs;
+    public $inputs;
 
     /**
+     * @var Pager
+     */
+    public $pager;
+
+    /**
+     * @param Pager             $pager
      * @param PaginateInterface $paginate
      * @param ToHtmlInterface   $toHtml
      */
     public function __construct(
-        PaginateInterface $paginate = null,
-        ToHtmlInterface $toHtml = null
+        Pager $pager,
+        PaginateInterface $paginate,
+        ToHtmlInterface $toHtml
     ) {
-        $this->paginate = $paginate ?: PaginateMini::forge();
-        $this->toHtml   = ToHtmlBootstrap::forge();
+        $this->pager    = $pager;
+        $this->paginate = $paginate;
+        $this->toHtml   = $toHtml;
     }
 
     /**
+     * @param Pager                  $pager
      * @param PaginateInterface|null $paginate
      * @param ToHtmlInterface|null   $toHtml
      * @return static
      */
     public static function forge(
+        Pager $pager = null,
         PaginateInterface $paginate = null,
         ToHtmlInterface $toHtml = null
     ) {
-        return new static($paginate, $toHtml);
+        $pager    = $pager ?: new Pager();
+        $paginate = $paginate ?: PaginateMini::forge();
+        $toHtml   = $toHtml ?: ToHtmlBootstrap::forge();
+        return new static($pager, $paginate, $toHtml);
     }
 
     /**
-     * @param Pager $pager
-     * @param \Closure $callback
-     * @return Pagination
+     * @param ServerRequestInterface $request
+     * @param \Closure               $callback
+     * @return static
      */
-    public function call(Pager $pager, $callback)
+    public function call($request, $callback)
     {
-        $this->inputs = $pager->call($callback);
+        $this->inputs = $this->pager->withRequest($request)->call($callback);
         return $this;
     }
 
@@ -91,9 +108,10 @@ class Pagination
      */
     private function getPaginate()
     {
-        $this->paginate->setAria($this->aria);
-        $this->paginate->numLinks($this->num_links);
-        return $this->paginate->withInputs($this->inputs);
+        $paginate = $this->paginate->withInputs($this->inputs);
+        $paginate->setAria($this->aria);
+        $paginate->numLinks($this->num_links);
+        return $paginate;
     }
 
     /**
@@ -101,7 +119,19 @@ class Pagination
      */
     public function toHtml()
     {
-        $this->toHtml->setLabels($this->label);
-        return $this->toHtml->withPaginate($this->getPaginate())->toString();
+        return $this->toHtml
+            ->withPaginate($this->getPaginate())
+            ->setLabels($this->label)
+            ->toString();
+    }
+
+    /**
+     * alias to toHtml method.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toHtml();
     }
 }
