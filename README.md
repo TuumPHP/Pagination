@@ -3,13 +3,13 @@ Pagination
 
 A generic pagination package for classic offset/limit style.
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/TuumPHP/Pagination/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/TuumPHP/Pagination/?branch=master)
+
 Some interesting features maybe:
 
 *   stores the current page and form inputs in session,
 *   can use PSR-7 ServerRequestInterface object,
 *   have a flexible pagination HTML generator.
-
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/TuumPHP/Pagination/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/TuumPHP/Pagination/?branch=master)
 
 ### PSR
 
@@ -49,29 +49,18 @@ Please note that there should be **no `_page` variables**.
 
 ### paginating a query
 
-To instantiate a `Pager` class, 
+The simplest way to use a `Pagination` class that combines all the functionalities. 
+
+To instantiate a `Pageinate` object, 
 
 ```php
-use WScore\Pagination\Pager;
+use Tuum\Pagination\Inputs;
+use Tuum\Pagination\Factory\Pagination;
 
-// construction
-$pager = new Pager(['_limit' => 15]);
-
-// set up pager using Psr-7 ServerRequestInterface.
-$pager = $pager->withRequest($request);
-// or from globa. 
-$pager = $pager->withQuery($_GET, '/find');
-```
-
-The pager object will store the query data (i.e. `$_GET`) to session for the subsequent requests if the session is already started. 
-
-Then, call a `Pager::call` method with a `closure` whose first argument is an `Inputs` object. 
-
-```php
-/** @var $inputs WScore\Pagination\Inputs */ 
-$inputs = $pager->call(
+$pages = Pagination::forge()->call(
+    $request, // PSR-7 ServerRequestInterface object
     function(Inputs $inputs) use($pdo) {
-        // query the PDO!
+        // sample query using PDO
         $found = $pdo->prepare("SELECT * FROM tbl WHERE type=? and num>? OFFSET ? LIMIT ?")
             ->execute([
                 $inputs->get('type'),
@@ -86,7 +75,9 @@ $found = $inputs->getList();
 $type  = $inputs->get('type');
 ```
 
-The `Inputs::get*` methods should provides information to construct queries. The `type` and `num` values are: 
+The `Inputs::get*` methods should provides information to construct a query. The `Inputs::setList` method sets the found results inside. 
+
+The `type` and `num` values are: 
 
 * taken from the form input and then saved to a session if no `_page` variables are present in the input query, or 
 * taken from a session data (if `_page` is present). 
@@ -115,27 +106,16 @@ will set offset to the page number of last request.
 
 ### generating pagination HTML 
 
-There is a simplified class, `Pagination`, which can generate  pagination HTML for Twitter's bootstrap ver3. 
+The Pagination class implements a `__toString` method to output pagination HTML string. As a default, the Pagination object outputs following style of pagination HTML for Bootstrap ver3. 
 
 ```php
-use Tuum\Pagination\Html\PaginateMini;
-use Tuum\Pagination\Html\ToHtmlBootstrap;
-
-// do some pager stuff above.
-$inputs = $pager->call(...);
-
-// generate pagination HTML for bootstrap.
-$htmlPages = ToHtmlBootstrap::forge()->withPaginate(
-    PaginateMini::forge()->withInputs($inputs)
-);
+$pager = Pagination::forge()...;
 echo $htmlPages->__toString(); // outputs the html.
 ```
 
-The above code may generate the following HTML. The `PaginateMini` class creates the array of pages, and `ToHtmlBootstrap` converts the array into the HTML.
-
 ![sample paginate HTML](./toHtmlMini.jpg)
 
-
+It is possible to change the pagination and HTML/CSS style by providing appropriate objects when constructing the `Pagination` object. 
 
 Technical Details
 -----
@@ -146,7 +126,8 @@ The pager does not know how to get a total; please supply the total count in the
 
 ```php
 // query 
-$inputs = $pager->call(
+$pager = $pager->call(
+    $request, 
     function(Inputs $inputs) use($pdo) {
         // calculate total
         $inputs->setTotal(
@@ -169,8 +150,8 @@ As a default, the input values are validated to contain no nulls as well as a va
 To change the validation, you can pass it at the construction of `Pager` as;
 
 ```php
-$pager = (new Pager())
-    ->useValidator(function(&$v) {
+$pager = Pagination::forge();
+$pager->pager->useValidator(function(&$v) {
         $v = 'validate=' . $v;
     });
 ```
@@ -189,43 +170,25 @@ function (&$v) {
 };
 ```
 
-### Pagination class
-
-There is a `Tuum\Pagination\Factory\Pagination` class to simplify the construction of various objects. 
-
-```php
-use Tuum\Pagination\Inputs;
-use Tuum\Pagination\Factory\Pagination;
-
-$pages = Pagination::forge()->call(
-    $request, // Psr-7 ServerRequestInterface object.
-    function(Inputs $inputs) {
-        // do some query stuff.
-        $inputs->setTotal(200);
-    });
-echo $pages->__toString();
-```
-
-It uses `PaginateMini` and `ToHtmlBootstrap` as a default. 
-
-To use other pagination style, try something like:
-
-```php
-$pages = Pagination::forge(new PaginateFull());
-```
-
 
 Generating Pagination Html
 ----
 
-There are two principal interfaces to generate a pagination HTML: `PaginateInterface` and `ToHtmlInterface`. 
+There are two principal interfaces to generate a pagination HTML: `PaginateInterface` and `ToHtmlInterface`. Use them like:
+
+```php
+$pager = Pagination::forge(
+    new MyPaginateClass,
+    new MyToHtmlClass
+);
+```
 
 ### `PaginateInterface` objects
 
 The PaginateInterface is responsible to construct the basic elements of pagination; first, prev, next, last, and each pages. In some cases, you may or may not want first elements. 
 
 ```php
-$paginate = (new Paginate)->withInputs($inputs);
+$paginate = (new MyPaginateClass)->withInputs($inputs);
 $pages    = $paginate->toArray();
 ```
 
@@ -238,8 +201,9 @@ $array = array(
 	  'page' => 1,
 	  'label' => 'First',
 	  'aria' => 'first page'
-	],
-	...
+	], 
+	[], // denotes an empty cell
+	[...],
 );
 ```
 
@@ -248,9 +212,9 @@ where,
 *   `rel`: shows relation to the current page. Either of 'first', 'next', 'prev', 'last', or numeric page numbers. 
 *   `href`: url to the page. 
 *   `page`: the page number.
-*   `label`: labels used in the HTML. 
+*   `label`: labels used in the HTML. If not set, it uses the default label as defined in `ToHtmlInterface` objects.
 *   `aria`: for aria-label.
-
+*   An empty array denotes a spacer, to be used to display such as [...]. 
 
 Following implementations of PaginateInterface are available:
 
