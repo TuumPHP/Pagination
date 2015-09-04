@@ -1,7 +1,9 @@
 <?php
-namespace Tuum\Pagination\Html;
+namespace Tuum\Pagination\ToHtml;
 
-class ToHtmlBootstrap implements ToHtmlInterface
+use Tuum\Pagination\Paginate\PaginateInterface;
+
+class ToBootstrap implements ToHtmlInterface
 {
     /**
      * @var array
@@ -49,7 +51,7 @@ class ToHtmlBootstrap implements ToHtmlInterface
 
     /**
      * @param array $labels
-     * @return ToHtmlBootstrap
+     * @return ToBootstrap
      */
     public static function forge(array $labels = [])
     {

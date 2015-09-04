@@ -1,5 +1,5 @@
 <?php
-namespace Tuum\Pagination\Html;
+namespace Tuum\Pagination\Paginate;
 
 class PaginateFull extends AbstractPaginate
 {

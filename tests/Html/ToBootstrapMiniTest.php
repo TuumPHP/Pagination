@@ -1,7 +1,7 @@
 <?php
 namespace tests\Html;
 
-use Tuum\Pagination\Html\PaginateMini;
+use Tuum\Pagination\Paginate\PaginateMini;
 use Tuum\Pagination\Inputs;
 use Tuum\Pagination\Pager;
 use Zend\Diactoros\ServerRequest;

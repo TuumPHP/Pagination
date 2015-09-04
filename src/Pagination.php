@@ -1,13 +1,11 @@
 <?php
-namespace Tuum\Pagination\Factory;
+namespace Tuum\Pagination;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Tuum\Pagination\Html\PaginateMini;
-use Tuum\Pagination\Html\PaginateInterface;
-use Tuum\Pagination\Html\ToHtmlBootstrap;
-use Tuum\Pagination\Html\ToHtmlInterface;
-use Tuum\Pagination\Inputs;
-use Tuum\Pagination\Pager;
+use Tuum\Pagination\Paginate\PaginateMini;
+use Tuum\Pagination\Paginate\PaginateInterface;
+use Tuum\Pagination\ToHtml\ToBootstrap;
+use Tuum\Pagination\ToHtml\ToHtmlInterface;
 
 class Pagination
 {
@@ -92,7 +90,7 @@ class Pagination
         }
         $pager    = $pager ?: new Pager();
         $paginate = $paginate ?: PaginateMini::forge();
-        $toHtml   = $toHtml ?: ToHtmlBootstrap::forge();
+        $toHtml   = $toHtml ?: ToBootstrap::forge();
         return new static($pager, $paginate, $toHtml);
     }
 

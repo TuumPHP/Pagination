@@ -1,5 +1,7 @@
 <?php
-namespace Tuum\Pagination\Factory;
+namespace Tuum\Pagination\Local;
+
+use Tuum\Pagination\Pagination;
 
 class PageJa extends Pagination
 {

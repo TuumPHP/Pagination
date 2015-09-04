@@ -1,7 +1,7 @@
 <?php
 namespace tests\Pagination;
 
-use Tuum\Pagination\Html\PaginateMini;
+use Tuum\Pagination\Paginate\PaginateMini;
 use Tuum\Pagination\Inputs;
 
 class PaginateMiniTest extends \PHPUnit_Framework_TestCase
@@ -18,7 +18,7 @@ class PaginateMiniTest extends \PHPUnit_Framework_TestCase
     
     function test0()
     {
-        $this->assertEquals('Tuum\Pagination\Html\PaginateMini', get_class($this->mini));
+        $this->assertEquals('Tuum\Pagination\Paginate\PaginateMini', get_class($this->mini));
     }
 
     /**

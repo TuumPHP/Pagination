@@ -1,7 +1,7 @@
 <?php
 namespace tests\Html;
 
-use Tuum\Pagination\Html\PaginateNext;
+use Tuum\Pagination\ToHtml\PaginateNext;
 use Tuum\Pagination\Inputs;
 use Tuum\Pagination\Pager;
 use Zend\Diactoros\ServerRequest;

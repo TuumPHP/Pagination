@@ -1,7 +1,7 @@
 <?php
 namespace tests\Html;
 
-use Tuum\Pagination\Factory\PageJa;
+use Tuum\Pagination\Local\PageJa;
 use Tuum\Pagination\Inputs;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Uri;

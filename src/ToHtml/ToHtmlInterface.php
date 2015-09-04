@@ -1,5 +1,7 @@
 <?php
-namespace Tuum\Pagination\Html;
+namespace Tuum\Pagination\ToHtml;
+
+use Tuum\Pagination\Paginate\PaginateInterface;
 
 /**
  * Interface ToHtml

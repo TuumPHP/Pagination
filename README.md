@@ -55,7 +55,7 @@ To instantiate a `Pageinate` object,
 
 ```php
 use Tuum\Pagination\Inputs;
-use Tuum\Pagination\Factory\Pagination;
+use Tuum\Pagination\Pagination;
 
 $pages = Pagination::forge()->call(
     $request, // PSR-7 ServerRequestInterface object
