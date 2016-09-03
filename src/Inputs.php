@@ -39,6 +39,16 @@ class Inputs
     public $inputs = [];
 
     /**
+     * @var PaginateInterface
+     */
+    private $paginate;
+
+    /**
+     * @var ToHtmlInterface
+     */
+    private $toHtml;
+
+    /**
      *
      */
     public function __construct()
@@ -265,11 +275,25 @@ class Inputs
      */
     public function getPagination($paginate = null, $toHtml = null)
     {
-        $paginate = $paginate instanceof PaginateInterface ? $paginate : new PaginateMini();
-        $toHtml   = $toHtml instanceof ToHtmlInterface ? $toHtml : new ToBootstrap();
+        if (!$paginate) {
+            $paginate = $this->paginate ?: new PaginateMini();
+        }
+        if (!$toHtml) {
+            $toHtml   = $this->toHtml ?: new ToBootstrap();
+        }
         $paginate = $paginate->withInputs($this);
         $toHtml   = $toHtml->withPaginate($paginate);
         
         return $toHtml;
+    }
+
+    /**
+     * @param null|PaginateInterface $paginate
+     * @param null|ToHtmlInterface $toHtml
+     */
+    public function setPagination($paginate = null, $toHtml = null)
+    {
+        $this->paginate = $paginate;
+        $this->toHtml   = $toHtml;
     }
 }
