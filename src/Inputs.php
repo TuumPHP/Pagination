@@ -1,6 +1,11 @@
 <?php
 namespace Tuum\Pagination;
 
+use Tuum\Pagination\Paginate\PaginateInterface;
+use Tuum\Pagination\Paginate\PaginateMini;
+use Tuum\Pagination\ToHtml\ToBootstrap;
+use Tuum\Pagination\ToHtml\ToHtmlInterface;
+
 class Inputs
 {
     /**
@@ -251,5 +256,20 @@ class Inputs
         }
         $page = (int)$page;
         return $this->path . '?' . $this->pagerKey . '=' . $page;
+    }
+
+    /**
+     * @param null|PaginateInterface $paginate
+     * @param null|ToHtmlInterface   $toHtml
+     * @return ToHtmlInterface
+     */
+    public function getPagination($paginate = null, $toHtml = null)
+    {
+        $paginate = $paginate instanceof PaginateInterface ? $paginate : new PaginateMini();
+        $toHtml   = $toHtml instanceof ToHtmlInterface ? $toHtml : new ToBootstrap();
+        $paginate = $paginate->withInputs($this);
+        $toHtml   = $toHtml->withPaginate($paginate);
+        
+        return $toHtml;
     }
 }

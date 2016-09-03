@@ -9,10 +9,10 @@ class ToBootstrap implements ToHtmlInterface
      * @var array
      */
     public $labels = [
-        'first'     => 'First',
-        'prev'      => '&laquo;',
-        'next'      => '&raquo;',
-        'last'      => 'Last',
+        'first'     => '&laquo;',
+        'prev'      => '<',
+        'next'      => '>',
+        'last'      => '&raquo;',
     ];
 
     /**
@@ -98,23 +98,21 @@ class ToBootstrap implements ToHtmlInterface
         if (empty($info)) {
             return $this->empty_li;
         }
-        $page  = isset($info['page']) ? $info['page'] : 1;
         $rel   = isset($info['rel']) ? $info['rel'] : '';
         $href  = isset($info['href']) ? $info['href'] : '';
         $aria  = isset($info['aria']) ? $info['aria'] : '';
         $label = isset($info['label']) && $info['label'] ? $info['label'] : 
             (isset($this->labels[$rel]) ? $this->labels[$rel] : $rel);
-        return $this->bootLi($label, $href, $aria, $page);
+        return $this->bootLi($label, $href, $aria);
     }
 
     /**
      * @param string $label
      * @param string $href
      * @param string $aria
-     * @param int    $page
      * @return string
      */
-    private function bootLi($label, $href, $aria, $page)
+    private function bootLi($label, $href, $aria)
     {
         $srLbl = $aria ? " aria-label=\"{$aria}\"" : '';
         if ($href != '#') {

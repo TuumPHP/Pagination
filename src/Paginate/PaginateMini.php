@@ -22,7 +22,7 @@ class PaginateMini extends AbstractPaginate
         $page_list = $this->fillPages();
 
         $pages = [];
-        $pages[] = $this->constructPage('prev', '&laquo;');
+        $pages[] = $this->constructPage('prev', '<');
         if (!$this->checkIfInPageList('first', $page_list)) {
             $page_list = array_slice($page_list, 2);
             $pages[] = $this->constructPage('first', 1);
@@ -34,7 +34,7 @@ class PaginateMini extends AbstractPaginate
             $pages[] = [];
             $pages[] = $this->constructPage('last', $this->calcPageNum('last'));
         }
-        $pages[] = $this->constructPage('next', '&raquo;');
+        $pages[] = $this->constructPage('next', '>');
 
         return $pages;
     }
