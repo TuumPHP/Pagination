@@ -38,11 +38,11 @@ class PageJaTest extends \PHPUnit_Framework_TestCase
             $inputs->setTotal(200);
         })->toHtml();
         $h = explode("\n", $html);
-        $this->assertContains('<li><a href="/test?_page=4" aria-label="前のページ" >&laquo;</a></li>', $h[1]);
+        $this->assertContains('<li><a href="/test?_page=4" aria-label="前のページ" ><</a></li>', $h[1]);
         $this->assertContains('<li><a href="/test?_page=1" aria-label="最初のページ" >1</a></li>', $h[2]);
         $this->assertContains('<li class="disable"><a href="#" >...</a></li>', $h[3]);
         $this->assertContains('<li><a href="/test?_page=4" >4</a></li>', $h[4]);
         $this->assertContains('<li><a href="/test?_page=10" aria-label="最後のページ" >10</a></li>', $h[8]);
-        $this->assertContains('<li><a href="/test?_page=6" aria-label="次のページ" >&raquo;</a></li>', $h[9]);
+        $this->assertContains('<li><a href="/test?_page=6" aria-label="次のページ" >></a></li>', $h[9]);
     }
 }
