@@ -154,17 +154,7 @@ class Inputs
         }
         return 0;
     }
-
-    /**
-     * same as getPage() method.
-     *
-     * @return int
-     */
-    public function calcSelfPage()
-    {
-        return $this->getPage();
-    }
-
+    
     /**
      * calculates the first page number, that is 1.
      *
@@ -189,72 +179,7 @@ class Inputs
         $pages = $this->getLimit();
         return (integer)(ceil($total / $pages));
     }
-
-    /**
-     * calculates the next page number.
-     *
-     * @return int
-     */
-    public function calcNextPage()
-    {
-        return min($this->getPage() + 1, $this->calcLastPage());
-    }
-
-    /**
-     * check if the next page exists (i.e. current page is not the last page).
-     *
-     * @return bool
-     */
-    public function existsNextPage()
-    {
-        return $this->getPage() < $this->calcLastPage();
-    }
-
-    /**
-     * calculates the previous page number.
-     *
-     * @return int
-     */
-    public function calcPrevPage()
-    {
-        return max($this->getPage() - 1, $this->calcFirstPage());
-    }
-
-    /**
-     * @return bool
-     */
-    public function existsPrevPage()
-    {
-        return $this->getPage() > $this->calcFirstPage();
-    }
-
-    /**
-     * @param int $numLinks
-     * @return array
-     */
-    public function calcPageList($numLinks)
-    {
-        $currPage = $this->getPage();
-        $lastPage = $this->calcLastPage();
-
-        $extra_1  = max(0, $numLinks - $currPage);
-        $extra_2  = max(0, $numLinks - ($lastPage - $currPage));
-        if ($extra_1 > 0 || $currPage === $numLinks) {
-            $extra_2 += $extra_1 + 1;
-        }
-        if ($extra_2 > 0) {
-            $extra_1 += $extra_2;
-        }
-        $start    = max($currPage - $numLinks - $extra_1, $this->calcFirstPage());
-        $last     = min($currPage + $numLinks + $extra_2, $this->calcLastPage());
-
-        $pages = [];
-        for ($p = $start; $p <= $last; $p++) {
-            $pages[] = $p;
-        }
-        return $pages;
-    }
-
+    
     /**
      * @param null|int $page
      * @return string

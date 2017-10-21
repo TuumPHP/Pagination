@@ -126,7 +126,6 @@ class PagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('tested', $inputs->get('test'));
         $this->assertEquals('done', $inputs->get('more'));
         $this->assertEquals('2', $inputs->getPage());
-        $this->assertEquals('2', $inputs->calcSelfPage());
         $this->assertEquals('20', $inputs->getLimit());
         $this->assertEquals('20', $inputs->getOffset());
         $this->assertEquals(123, $inputs->getTotal());

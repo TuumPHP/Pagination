@@ -55,15 +55,14 @@ class Paginate implements \IteratorAggregate
      * @param Inputs $inputs
      * @return Paginate
      */
-    public static function forge(Inputs $inputs)
+    public function setInputs(Inputs $inputs)
     {
-        $self = new self(
-            $inputs->getPage(),
-            $inputs->calcLastPage(),
-            $inputs->pagerKey,
-            1
-        );
-        return $self;
+        $this->currPage  = $inputs->getPage();
+        $this->firstPage = $inputs->calcFirstPage();
+        $this->lastPage  = $inputs->calcLastPage();
+        $this->pagerKey  = $inputs->pagerKey;
+
+        return $this;
     }
 
     /**

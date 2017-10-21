@@ -85,21 +85,7 @@ abstract class AbstractPaginate implements PaginateInterface
         $self->currPage = $inputs->getPage();
         return $self;
     }
-
-    /**
-     * @return array
-     */
-    protected function fillPages()
-    {
-        $numLinks = $this->num_links;
-        $lists = $this->inputs->calcPageList($numLinks);
-        $pages = [];
-        foreach ($lists as $page) {
-            $pages[$page] = $this->constructPage($page);
-        }
-        return $pages;
-    }
-
+    
     /**
      * @param string|int  $page
      * @param array       $page_list
