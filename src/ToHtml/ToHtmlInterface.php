@@ -12,22 +12,9 @@ interface ToHtmlInterface
 {
     /**
      * @param PaginateInterface $paginate
-     * @return $this
+     * @return ToHtmlInterface
      */
-    public function withPaginate(PaginateInterface $paginate);
-
-    /**
-     * @param array $labels
-     * @return $this
-     */
-    public function setLabels(array $labels);
-
-    /**
-     * construct HTML (i.e. string) from PaginateInterface::toArray.
-     *
-     * @return string
-     */
-    public function toString();
+    public function setPaginate(PaginateInterface $paginate);
 
     /**
      * @return string

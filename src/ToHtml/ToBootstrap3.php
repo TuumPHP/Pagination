@@ -3,8 +3,9 @@ namespace Tuum\Pagination\ToHtml;
 
 use Tuum\Pagination\Paginate\Page;
 use Tuum\Pagination\Paginate\Paginate;
+use Tuum\Pagination\Paginate\PaginateInterface;
 
-class ToBootstrap3
+class ToBootstrap3 implements ToHtmlInterface
 {
     /**
      * @var Paginate
@@ -17,6 +18,15 @@ class ToBootstrap3
      * @param Paginate $paginate
      */
     public function __construct($paginate)
+    {
+        $this->paginate = $paginate;
+    }
+
+    /**
+     * @param PaginateInterface $paginate
+     * @return ToHtmlInterface
+     */
+    public function setPaginate(PaginateInterface $paginate)
     {
         $this->paginate = $paginate;
     }
@@ -36,11 +46,13 @@ class ToBootstrap3
     {
         $paginate = $this->paginate;
         $html     = '<ul class="pagination">';
+        $html     .= $this->liLabel($paginate->getPrevPage(), '&lt;');
         $html     .= $this->li($paginate->getFirstPage());
         foreach ($paginate as $page) {
             $html .= $this->li($page);
         }
         $html .= $this->li($paginate->getLastPage());
+        $html     .= $this->liLabel($paginate->getNextPage(), '&gt;');
         $html .= '</ul>';
 
         return $html;
@@ -50,15 +62,25 @@ class ToBootstrap3
      * @param Page $p
      * @return string
      */
-    private function li(Page $p)
+    private function li(Page $p, $label = null)
     {
+        $label = $label ?: $p->getPage();
         if ($p->isDisabled()) {
-            return '<li class="disable"><a href="#" >...</a></li>';
+            return '<li class="disabled"><a href="#" >...</a></li>';
         }
         if ($p->isCurrent()) {
-            return "<li class=\"active\"><a href=\"#\" >{$p->getPage()}</a></li>\n";
+            return "<li class=\"active\"><a href=\"#\" >{$label}<span class='sr-only'>current</span></a></li>\n";
         }
 
-        return "<li><a href=\"{$p->getUrl()}\" >{$p->getPage()}</a></li>\n";
+        return "<li><a href=\"{$p->getUrl()}\" >{$label}</a></li>\n";
+    }
+    
+    private function liLabel(Page $p, $label)
+    {
+        if ($p->isCurrent()) {
+            return "<li class=\"disabled\"><a href=\"#\" >{$label}</a></li>\n";
+        }
+
+        return "<li><a href=\"{$p->getUrl()}\" >{$label}</a></li>\n";
     }
 }

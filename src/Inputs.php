@@ -1,9 +1,9 @@
 <?php
 namespace Tuum\Pagination;
 
+use Tuum\Pagination\Paginate\Paginate;
 use Tuum\Pagination\Paginate\PaginateInterface;
-use Tuum\Pagination\Paginate\PaginateMini;
-use Tuum\Pagination\ToHtml\ToBootstrap;
+use Tuum\Pagination\ToHtml\ToBootstrap3;
 use Tuum\Pagination\ToHtml\ToHtmlInterface;
 
 class Inputs
@@ -44,15 +44,13 @@ class Inputs
     private $paginate;
 
     /**
-     * @var ToHtmlInterface
-     */
-    private $toHtml;
-
-    /**
+     * Inputs constructor.
      *
+     * @param PaginateInterface $paginate
      */
-    public function __construct()
+    public function __construct($paginate = null)
     {
+        $this->paginate = $paginate;
     }
 
     /**
@@ -194,31 +192,12 @@ class Inputs
     }
 
     /**
-     * @param null|PaginateInterface $paginate
-     * @param null|ToHtmlInterface   $toHtml
-     * @return ToHtmlInterface
+     * @return PaginateInterface
      */
-    public function getPagination($paginate = null, $toHtml = null)
+    public function getPagination()
     {
-        if (!$paginate) {
-            $paginate = $this->paginate ?: new PaginateMini();
-        }
-        if (!$toHtml) {
-            $toHtml   = $this->toHtml ?: new ToBootstrap();
-        }
-        $paginate = $paginate->withInputs($this);
-        $toHtml   = $toHtml->withPaginate($paginate);
+        $paginate = $this->paginate ? $this->paginate->setInputs($this): Paginate::forge($this);
         
-        return $toHtml;
-    }
-
-    /**
-     * @param null|PaginateInterface $paginate
-     * @param null|ToHtmlInterface $toHtml
-     */
-    public function setPagination($paginate = null, $toHtml = null)
-    {
-        $this->paginate = $paginate;
-        $this->toHtml   = $toHtml;
+        return $paginate;
     }
 }
