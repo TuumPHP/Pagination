@@ -42,11 +42,11 @@ class Pager
     private $inputs = [];
 
     /**
-     * default values.
+     * default values for input query ($this->inputs).
      *
      * @var array
      */
-    private $default = [];
+    private $defaultInputs = [];
 
     /**
      * path for the query.
@@ -66,11 +66,25 @@ class Pager
      */
     public function __construct(array $default = [], $inputObject = null)
     {
-        $this->default = $default + [
+        $this->defaultInputs = $default + [
                 $this->pagerKey => 1,
                 $this->limitKey => 20
             ];
-        $this->inputObject = $inputObject;
+        $this->inputObject   = $inputObject;
+    }
+
+    /**
+     * @param string $name
+     * @param array  $default
+     * @param null   $inputObject
+     * @return Pager
+     */
+    public static function forge($name = '', array $default, $inputObject = null)
+    {
+        $self = new self($default, $inputObject);
+        $self->name = $name ?: 'pager-' . $name;
+        
+        return $self;
     }
 
     /**
@@ -130,7 +144,7 @@ class Pager
         } else {
             $this->inputs = $this->loadFromSession($query);
         }
-        $this->inputs += $this->default;
+        $this->inputs += $this->defaultInputs;
         $this->saveToSession();
     }
 
@@ -194,7 +208,7 @@ class Pager
     private function setSessionName($pathInfo)
     {
         $this->path = $pathInfo;
-        $this->name = 'pager-' . md5($pathInfo);
+        $this->name = $this->name ?: 'pager-' . md5($pathInfo);
     }
 
     /**
@@ -209,6 +223,14 @@ class Pager
         $inputs = $this->forgeInputs();
         $closure($inputs);
         return $inputs;
+    }
+
+    /**
+     * @return Inputs
+     */
+    public function getInputs()
+    {
+        return $this->forgeInputs();
     }
 
     /**
