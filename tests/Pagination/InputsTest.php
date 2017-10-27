@@ -75,11 +75,5 @@ class InputsTest extends \PHPUnit_Framework_TestCase
         $i = $this->inputs;
         $this->assertEquals(1, $i->calcFirstPage());
         $this->assertEquals(10, $i->calcLastPage());
-        $this->assertEquals(2, $i->calcPrevPage());
-        $this->assertEquals(3, $i->calcSelfPage());
-        $this->assertEquals(4, $i->calcNextPage());
-        $this->assertTrue($i->existsNextPage());
-        $this->assertTrue($i->existsPrevPage());
-        $this->assertEquals([1,2,3,4,5], $i->calcPageList(2));
     }
 }

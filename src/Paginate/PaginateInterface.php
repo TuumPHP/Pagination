@@ -1,46 +1,49 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: asao
+ * Date: 2017/10/21
+ * Time: 16:07
+ */
 namespace Tuum\Pagination\Paginate;
 
 use Tuum\Pagination\Inputs;
 
-/**
- * Interface PaginateInterface
- *
- * @package WScore\Pagination\Html
- */
 interface PaginateInterface
 {
     /**
      * @param Inputs $inputs
-     * @return $this
+     * @return PaginateInterface
      */
-    public function withInputs(Inputs $inputs);
+    public function setInputs(Inputs $inputs);
 
     /**
-     * @param int $num
-     * @return $this
+     * @return Page[]|\Iterator
      */
-    public function numLinks($num);
+    public function getIterator();
 
     /**
-     * @param array $aria
-     * @return $this
+     * @return Page
      */
-    public function setAria(array $aria);
+    public function getFirstPage();
 
     /**
-     * constructs an array of page information.
-     *   $pages = array(
-     *     [...page info...], [...]
-     *   );
-     *
-     * where page info is consisted of the following.
-     *   - rel : relation to the current page, such as 'first'.
-     *   - href: uri for the page.
-     *   - aria: human readable description.
-     *
-     * @API
-     * @return array
+     * @return Page
      */
-    public function toArray();
+    public function getLastPage();
+
+    /**
+     * @return Page
+     */
+    public function getNextPage();
+
+    /**
+     * @return Page
+     */
+    public function getPrevPage();
+
+    /**
+     * @return string
+     */
+    public function __toString();
 }
