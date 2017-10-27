@@ -29,6 +29,7 @@ class ToBootstrap3 implements ToHtmlInterface
     public function setPaginate(PaginateInterface $paginate)
     {
         $this->paginate = $paginate;
+        return $this;
     }
 
     /**

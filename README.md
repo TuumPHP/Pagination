@@ -11,6 +11,14 @@ Some interesting features maybe:
 *   can use PSR-7 ServerRequestInterface object,
 *   have a flexible pagination HTML generator.
 
+In short, accessing the page with `_page` 
+
+```
+http://example.come/pagination?_page
+``` 
+
+will restore the last pagination result.  
+
 ### PSR
 
 PSR-1, PSR-2, PSR-4, and PSR-7.
@@ -57,22 +65,18 @@ To instantiate a `Pageinate` object,
 use Tuum\Pagination\Inputs;
 use Tuum\Pagination\Pagination;
 
-$pages = Pagination::forge()->call(
-    $request, // PSR-7 ServerRequestInterface object
-    function(Inputs $inputs) use($pdo) {
-        // sample query using PDO
-        $found = $pdo->prepare("SELECT * FROM tbl WHERE type=? and num>? OFFSET ? LIMIT ?")
-            ->execute([
-                $inputs->get('type'),
-                $inputs->get('num'),
-                $inputs->getOffset(),
-                $inputs->getLimit(),
-            ])
-            ->fetchAll();
-        $inputs->setList($found);
-    });
-$found = $inputs->getList();
-$type  = $inputs->get('type');
+$pager = new Pager();
+$pager->withRequest($request); // PSR-7 server request.
+$inputs = $pager->getInputs();
+
+$found = $pdo->prepare("SELECT * FROM tbl WHERE type=? and num>? OFFSET ? LIMIT ?")
+    ->execute([
+        $inputs->get('type'),
+        $inputs->get('num'),
+        $inputs->getOffset(),
+        $inputs->getLimit(),
+    ])
+    ->fetchAll();
 ```
 
 The `Inputs::get*` methods should provides information to construct a query. The `Inputs::setList` method sets the found results inside. 
@@ -109,8 +113,7 @@ will set offset to the page number of last request.
 The Pagination class implements a `__toString` method to output pagination HTML string. As a default, the Pagination object outputs following style of pagination HTML for Bootstrap ver3. 
 
 ```php
-$pager = Pagination::forge()...;
-echo $htmlPages->__toString(); // outputs the html.
+echo $inputs; // outputs the html for Bootstrap3.
 ```
 
 ![sample paginate HTML](./toHtmlMini.jpg)
@@ -125,22 +128,14 @@ Technical Details
 The pager does not know how to get a total; please supply the total count in the closure inside the call method usging `Inputs::setTotal` method; 
 
 ```php
-// query 
-$pager = $pager->call(
-    $request, 
-    function(Inputs $inputs) use($pdo) {
-        // calculate total
-        $inputs->setTotal(
-            $pdo->prepare("SELECT COUNT(*) FROM tbl WHERE type=? and num>? ")
-                ->execute([
-                    $inputs->get('type'),
-                    $inputs->get('num')
-                ])
-                ->fetchColumn()
-        );
-        // query the PDO!
-        $inputs->setList($pdo->prepare("..."));
-    });
+$inputs->setTotal(
+    $pdo->prepare("SELECT COUNT(*) FROM tbl WHERE type=? and num>? ")
+        ->execute([
+            $inputs->get('type'),
+            $inputs->get('num')
+        ])
+        ->fetchColumn()
+);
 ```
 
 ### security
@@ -150,7 +145,6 @@ As a default, the input values are validated to contain no nulls as well as a va
 To change the validation, you can pass it at the construction of `Pager` as;
 
 ```php
-$pager = Pagination::forge();
 $pager->pager->useValidator(function(&$v) {
         $v = 'validate=' . $v;
     });
@@ -173,61 +167,4 @@ function (&$v) {
 
 Generating Pagination Html
 ----
-
-There are two principal interfaces to generate a pagination HTML: `PaginateInterface` and `ToHtmlInterface`. Use them like:
-
-```php
-$pager = Pagination::forge(
-    new MyPaginateClass,
-    new MyToHtmlClass
-);
-```
-
-### `PaginateInterface` objects
-
-The PaginateInterface is responsible to construct the basic elements of pagination; first, prev, next, last, and each pages. In some cases, you may or may not want first elements. 
-
-```php
-$paginate = (new MyPaginateClass)->withInputs($inputs);
-$pages    = $paginate->toArray();
-```
-
-the `toArray` method returns an array, consisted of;
-
-```php
-$array = array(
-	[ 'rel' => 'first', 
-	  'href' => 'test?_page=1', 
-	  'page' => 1,
-	  'label' => 'First',
-	  'aria' => 'first page'
-	], 
-	[], // denotes an empty cell
-	[...],
-);
-```
-
-where, 
-
-*   `rel`: shows relation to the current page. Either of 'first', 'next', 'prev', 'last', or numeric page numbers. 
-*   `href`: url to the page. 
-*   `page`: the page number.
-*   `label`: labels used in the HTML. If not set, it uses the default label as defined in `ToHtmlInterface` objects.
-*   `aria`: for aria-label.
-*   An empty array denotes a spacer, to be used to display such as [...]. 
-
-Following implementations of PaginateInterface are available:
-
-*   `PaginateFull`
-*   `PaginateMini`
-
-
-
-### `ToHtmlInterface` objects
-
-The `ToHtmlInterface ` objects takes a `PaginateInterface` object and convert into an HTML. Currently, there is only one implementation: `ToHtmlBootstrap`.
-
-```php
-echo ToHtmlBootstrap::forge()->withPaginate($paginate)->__toString();
-```
 

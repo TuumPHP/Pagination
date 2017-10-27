@@ -3,8 +3,6 @@ namespace Tuum\Pagination;
 
 use Tuum\Pagination\Paginate\Paginate;
 use Tuum\Pagination\Paginate\PaginateInterface;
-use Tuum\Pagination\ToHtml\ToBootstrap3;
-use Tuum\Pagination\ToHtml\ToHtmlInterface;
 
 class Inputs
 {
