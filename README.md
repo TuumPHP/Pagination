@@ -32,7 +32,7 @@ MIT license
 Please use composer to install WScore/Pagination package. 
 
 ```sh
-$ composer require "tuum/pagination"
+$ composer require "tuum/pagination: ^1.0"
 ```
 
 
@@ -46,7 +46,7 @@ The page key variable, `_page`, is the key.
 Let's start with an HTML form for a pagination, for example; 
 
 ```html
-<form action="find">
+<form action="">
   <input type="text" name="type" />
   <input type="integer" name="num" />
   <input type="submit" />
@@ -113,12 +113,20 @@ will set offset to the page number of last request.
 The Pagination class implements a `__toString` method to output pagination HTML string. As a default, the Pagination object outputs following style of pagination HTML for Bootstrap ver3. 
 
 ```php
-echo $inputs->getPagination();
+echo $inputs;
 ```
 
 ![sample paginate HTML](./toHtmlMini.jpg)
 
-It is possible to change the pagination and HTML/CSS style by providing appropriate objects when constructing the `Pagination` object. 
+It is possible to change the pagination and HTML/CSS style by 
+modifying the pagination logic and html formatter, such that; 
+
+```php
+$pages = $inputs->getPagination();
+$pages->numLinks = 7;
+$pagination = new ToBootstrap3($paginate)
+echo $pagination;
+```
 
 Technical Details
 -----
@@ -163,8 +171,4 @@ function (&$v) {
     }
 };
 ```
-
-
-Generating Pagination Html
-----
 
