@@ -2,25 +2,13 @@
 namespace Tuum\Pagination\Paginate;
 
 use Tuum\Pagination\Inputs;
-use Tuum\Pagination\ToHtml\ToBootstrap3;
-use Tuum\Pagination\ToHtml\ToHtmlInterface;
 
 class Paginate implements \IteratorAggregate, PaginateInterface
 {
     /**
-     * @var ToHtmlInterface
-     */
-    private $toHtml;
-    
-    /**
      * @var int
      */
     protected $currPage;
-
-    /**
-     * @var int
-     */
-    public $num_links = 5;
 
     /**
      * @var int
@@ -40,7 +28,7 @@ class Paginate implements \IteratorAggregate, PaginateInterface
     /**
      * @var int
      */
-    private $numLinks = 5;
+    public $numLinks = 5;
 
     /**
      * Paginate constructor.
@@ -72,15 +60,7 @@ class Paginate implements \IteratorAggregate, PaginateInterface
             );
         return $self;
     }
-
-    /**
-     * @param ToHtmlInterface $toHtml
-     */
-    public function setToHtml($toHtml)
-    {
-        $this->toHtml = $toHtml;
-    }
-
+    
     /**
      * @param Inputs $inputs
      * @return Paginate
@@ -217,14 +197,5 @@ class Paginate implements \IteratorAggregate, PaginateInterface
     {
         $page = max($this->currPage - 1, $this->firstPage);
         return $this->forgePage($page);
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        $toHtml = $this->toHtml ? $this->toHtml->setPaginate($this): new ToBootstrap3($this);
-        return $toHtml->__toString();
     }
 }

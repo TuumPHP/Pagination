@@ -41,9 +41,4 @@ interface PaginateInterface
      * @return Page
      */
     public function getPrevPage();
-
-    /**
-     * @return string
-     */
-    public function __toString();
 }

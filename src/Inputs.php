@@ -36,20 +36,13 @@ class Inputs
      * @var array
      */
     public $inputs = [];
-
-    /**
-     * @var PaginateInterface
-     */
-    private $paginate;
-
+    
     /**
      * Inputs constructor.
      *
-     * @param PaginateInterface $paginate
      */
-    public function __construct($paginate = null)
+    public function __construct()
     {
-        $this->paginate = $paginate;
     }
 
     /**
@@ -195,16 +188,15 @@ class Inputs
      */
     public function getPagination()
     {
-        $paginate = $this->paginate ? $this->paginate->setInputs($this): Paginate::forge($this);
-        
-        return $paginate;
+        return Paginate::forge($this);
     }
 
     /**
-     * @param PaginateInterface $paginate
+     * @return string
      */
-    public function setPaginate($paginate)
+    public function __toString()
     {
-        $this->paginate = $paginate;
+        $toHtml = new ToBootstrap3(Paginate::forge($this));
+        return (string) $toHtml;
     }
 }
