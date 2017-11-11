@@ -17,7 +17,7 @@ class ToBootstrap3 implements ToHtmlInterface
      *
      * @param Paginate $paginate
      */
-    public function __construct($paginate)
+    public function __construct($paginate = null)
     {
         $this->paginate = $paginate;
     }

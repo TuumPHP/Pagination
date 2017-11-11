@@ -3,6 +3,7 @@ namespace Tuum\Pagination;
 
 use Tuum\Pagination\Paginate\Paginate;
 use Tuum\Pagination\Paginate\PaginateInterface;
+use Tuum\Pagination\ToHtml\ToBootstrap3;
 
 class Inputs
 {
@@ -197,5 +198,13 @@ class Inputs
         $paginate = $this->paginate ? $this->paginate->setInputs($this): Paginate::forge($this);
         
         return $paginate;
+    }
+
+    /**
+     * @param PaginateInterface $paginate
+     */
+    public function setPaginate($paginate)
+    {
+        $this->paginate = $paginate;
     }
 }

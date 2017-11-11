@@ -74,6 +74,14 @@ class Paginate implements \IteratorAggregate, PaginateInterface
     }
 
     /**
+     * @param ToHtmlInterface $toHtml
+     */
+    public function setToHtml($toHtml)
+    {
+        $this->toHtml = $toHtml;
+    }
+
+    /**
      * @param Inputs $inputs
      * @return Paginate
      */

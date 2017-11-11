@@ -113,7 +113,7 @@ will set offset to the page number of last request.
 The Pagination class implements a `__toString` method to output pagination HTML string. As a default, the Pagination object outputs following style of pagination HTML for Bootstrap ver3. 
 
 ```php
-echo $inputs; // outputs the html for Bootstrap3.
+echo $inputs->getPagination();
 ```
 
 ![sample paginate HTML](./toHtmlMini.jpg)
