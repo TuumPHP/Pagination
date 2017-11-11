@@ -63,25 +63,23 @@ class ToBootstrap3 implements ToHtmlInterface
      * @param Page $p
      * @return string
      */
-    private function li(Page $p, $label = null)
+    private function li(Page $p)
     {
-        $label = $label ?: $p->getPage();
+        $label = $p->isDisabled('...', $p->getPage());
+        $href  = $p->isCurrent('#', $p->getUrl());
+        $only  = $p->isCurrent('<span class=\'sr-only\'>current</span>', '');
         if ($p->isDisabled()) {
-            return '<li class="disabled"><a href="#" >...</a></li>';
+            return "<li class=\"disabled\"><a href=\"{$href}\" >{$label}</a></li>";
         }
         if ($p->isCurrent()) {
-            return "<li class=\"active\"><a href=\"#\" >{$label}<span class='sr-only'>current</span></a></li>\n";
+            return "<li class=\"active\"><a href=\"{$href}\" >{$label}{$only}</a></li>\n";
         }
 
-        return "<li><a href=\"{$p->getUrl()}\" >{$label}</a></li>\n";
+        return "<li><a href=\"{$href}\" >{$label}{$only}</a></li>\n";
     }
     
     private function liLabel(Page $p, $label)
     {
-        if ($p->isCurrent()) {
-            return "<li class=\"disabled\"><a href=\"#\" >{$label}</a></li>\n";
-        }
-
-        return "<li><a href=\"{$p->getUrl()}\" >{$label}</a></li>\n";
+        return "<li class=\"{$p->isCurrent('disabled')}\"><a href=\"{$p->isCurrent('#', $p->getUrl())}\" >{$label}</a></li>\n";
     }
 }

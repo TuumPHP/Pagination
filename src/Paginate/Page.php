@@ -43,19 +43,25 @@ class Page
     }
 
     /**
-     * @return bool
+     * @param bool|string $true
+     * @param bool|string $false
+     * @return bool|string
      */
-    public function isCurrent()
+    public function isCurrent($true = true, $false = false)
     {
-        return $this->currPage === $this->page;
+        return $this->currPage === $this->page 
+            ? $true: $false;
     }
 
     /**
-     * @return bool
+     * @param bool|string $true
+     * @param bool|string $false
+     * @return bool|string
      */
-    public function isDisabled()
+    public function isDisabled($true = true, $false = false)
     {
-        return !$this->page;
+        return !$this->page
+            ? $true: $false;
     }
 
     /**
