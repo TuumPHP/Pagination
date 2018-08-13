@@ -79,7 +79,7 @@ class Pager
      * @param null   $inputObject
      * @return Pager
      */
-    public static function forge($name = '', array $default, $inputObject = null)
+    public static function forge($name = '', array $default = [], $inputObject = null)
     {
         $self = new self($default, $inputObject);
         $self->name = $name ?: 'pager-' . $name;
