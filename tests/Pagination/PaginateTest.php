@@ -6,7 +6,7 @@ use Tuum\Pagination\Paginate\Paginate;
 
 require_once __DIR__ . '/../autoloader.php';
 
-class PaginateTest extends \PHPUnit_Framework_TestCase
+class PaginateTest extends \PHPUnit\Framework\TestCase
 {
     public function testOnly4()
     {

@@ -6,7 +6,7 @@ use Tuum\Pagination\ToHtml\ToBootstrap3;
 
 require_once __DIR__ . '/../autoloader.php';
 
-class ToBootstrap3Test extends \PHPUnit_Framework_TestCase
+class ToBootstrap3Test extends \PHPUnit\Framework\TestCase
 {
     public function test0()
     {

@@ -3,7 +3,7 @@ namespace tests\Pagination;
 
 use Tuum\Pagination\Inputs;
 
-class InputsTest extends \PHPUnit_Framework_TestCase
+class InputsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Inputs
