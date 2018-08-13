@@ -9,7 +9,8 @@
         }
     ],
     "require": {
-      "psr/http-message": "^1.0"
+        "psr/http-message": "^1.0",
+        "ext-mbstring": "*"
     },
     "require-dev": {
         "psr/http-message": "~1.0",
