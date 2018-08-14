@@ -36,6 +36,11 @@ class Inputs
      * @var array
      */
     public $inputs = [];
+
+    /**
+     * @var string      class name of ToHtmlInterface. 
+     */
+    private $defaultToHtml = ToBootstrap3::class;
     
     /**
      * Inputs constructor.
@@ -196,7 +201,19 @@ class Inputs
      */
     public function __toString()
     {
-        $toHtml = new ToBootstrap3(Paginate::forge($this));
+        $class = $this->defaultToHtml;
+        $toHtml = new $class(Paginate::forge($this));
         return (string) $toHtml;
+    }
+
+    /**
+     * set a class to convert to html pagination.
+     * The class must implement ToHtmlInterface.
+     * 
+     * @param string $defaultToHtml
+     */
+    public function setDefaultToHtml($defaultToHtml)
+    {
+        $this->defaultToHtml = $defaultToHtml;
     }
 }
