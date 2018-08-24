@@ -39,7 +39,7 @@ class Page
      */
     public function getPage()
     {
-        return $this->page ?: '';
+        return (int) $this->page ?: '';
     }
 
     /**

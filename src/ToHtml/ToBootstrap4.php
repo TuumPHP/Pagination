@@ -52,8 +52,11 @@ class ToBootstrap4 implements ToHtmlInterface
         foreach ($paginate as $page) {
             $html .= $this->li($page);
         }
-        $html .= $this->li($paginate->getLastPage());
-        $html     .= $this->liLabel($paginate->getNextPage(), '&gt;');
+        $last = $paginate->getLastPage();
+        if ($last->getPage() > 1) {
+            $html .= $this->li($last);
+        }
+        $html .= $this->liLabel($paginate->getNextPage(), '&gt;');
         $html .= '</ul></nav>';
 
         return $html;
