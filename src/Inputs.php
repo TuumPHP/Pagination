@@ -8,6 +8,11 @@ use Tuum\Pagination\ToHtml\ToBootstrap3;
 class Inputs
 {
     /**
+     * @var int
+     */
+    public $defaultLimit = 20;
+
+    /**
      * @var string
      */
     public $pagerKey = '_page';
@@ -38,10 +43,10 @@ class Inputs
     public $inputs = [];
 
     /**
-     * @var string      class name of ToHtmlInterface. 
+     * @var string      class name of ToHtmlInterface.
      */
     private $defaultToHtml = ToBootstrap3::class;
-    
+
     /**
      * Inputs constructor.
      *
@@ -57,7 +62,7 @@ class Inputs
      */
     public function getLimit()
     {
-        return (int)isset($this->inputs[$this->limitKey]) ? $this->inputs[$this->limitKey] : 20;
+        return (int)isset($this->inputs[$this->limitKey]) ? $this->inputs[$this->limitKey] : $this->defaultLimit;
     }
 
     /**
@@ -77,7 +82,17 @@ class Inputs
      */
     public function getPage()
     {
-        return (int)isset($this->inputs[$this->pagerKey]) ? $this->inputs[$this->pagerKey] : 1;
+        $page = 1;
+        if (!isset($this->inputs[$this->pagerKey])) {
+            return $page;
+        }
+        if (!$this->inputs[$this->pagerKey]) {
+            return $page;
+        }
+        if ((int) $this->inputs[$this->pagerKey] > 0) {
+            return (int) $this->inputs[$this->pagerKey];
+        }
+        return $page;
     }
 
     /**
@@ -149,7 +164,7 @@ class Inputs
         }
         return 0;
     }
-    
+
     /**
      * calculates the first page number, that is 1.
      *
@@ -174,7 +189,7 @@ class Inputs
         $pages = $this->getLimit();
         return (integer)(ceil($total / $pages));
     }
-    
+
     /**
      * @param null|int $page
      * @return string
@@ -209,7 +224,7 @@ class Inputs
     /**
      * set a class to convert to html pagination.
      * The class must implement ToHtmlInterface.
-     * 
+     *
      * @param string $defaultToHtml
      */
     public function setDefaultToHtml($defaultToHtml)
