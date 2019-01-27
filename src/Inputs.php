@@ -62,7 +62,8 @@ class Inputs
      */
     public function getLimit()
     {
-        return (int)isset($this->inputs[$this->limitKey]) ? $this->inputs[$this->limitKey] : $this->defaultLimit;
+        $limit = $this->getInt($this->limitKey, 0);
+        return $limit > 1 ? $limit : $this->defaultLimit;
     }
 
     /**
@@ -82,17 +83,25 @@ class Inputs
      */
     public function getPage()
     {
-        $page = 1;
-        if (!isset($this->inputs[$this->pagerKey])) {
-            return $page;
+        $page = $this->getInt($this->pagerKey, 1);
+        return $page > 0 ? $page : 1;
+    }
+
+    /**
+     * @param string $key
+     * @param int    $default
+     * @return int
+     */
+    private function getInt($key, $default)
+    {
+        if (!isset($this->inputs[$key])) {
+            return $default;
         }
-        if (!$this->inputs[$this->pagerKey]) {
-            return $page;
+        if (!$this->inputs[$key]) {
+            return $default;
         }
-        if ((int) $this->inputs[$this->pagerKey] > 0) {
-            return (int) $this->inputs[$this->pagerKey];
-        }
-        return $page;
+        $value = (int) $this->inputs[$key];
+        return is_integer($value) ? $value : $default;
     }
 
     /**
