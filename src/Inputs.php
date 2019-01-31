@@ -100,8 +100,7 @@ class Inputs
         if (!$this->inputs[$key]) {
             return $default;
         }
-        $value = (int) $this->inputs[$key];
-        return is_integer($value) ? $value : $default;
+        return (int) $this->inputs[$key];
     }
 
     /**
