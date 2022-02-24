@@ -78,7 +78,7 @@ class Paginate implements \IteratorAggregate, PaginateInterface
     /**
      * @return Page[]|\Iterator
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         $pages = $this->calcPageList();
         foreach($pages as $p) {

@@ -13,7 +13,7 @@ class PagerTest extends \PHPUnit\Framework\TestCase
      */
     private $pager;
 
-    function setup()
+    protected function setUp(): void
     {
         $this->pager   = new Pager();
         $_SESSION = [];

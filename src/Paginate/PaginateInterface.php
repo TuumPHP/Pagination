@@ -20,7 +20,7 @@ interface PaginateInterface
     /**
      * @return Page[]|\Iterator
      */
-    public function getIterator();
+    public function getIterator(): \Traversable;
 
     /**
      * @return Page

@@ -10,7 +10,7 @@ class InputsTest extends \PHPUnit\Framework\TestCase
      */
     private $inputs;
 
-    function setup()
+    protected function setUp(): void
     {
         $this->inputs = new Inputs();
     }
